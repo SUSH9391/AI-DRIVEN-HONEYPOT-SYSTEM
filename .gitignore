@@ -3,3 +3,5 @@ venv/
 .env
 *.pyc
 *.log
+*TODO.md
+TODO.md
