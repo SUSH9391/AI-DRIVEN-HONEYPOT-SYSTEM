@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - FakeShopSmart (Honeypot)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <style>
+    /* Additional styles to ensure consistent display */
+    .header {
+      background-color: #3f51b5;
+      color: white;
+      padding: 15px 0;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo i {
+      margin-right: 0.5rem;
+    }
+    
+    .nav {
+      display: flex;
+      align-items: center;
+    }
+    
+    .nav-list {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .nav-item {
+      margin-left: 1.5rem;
+    }
+    
+    .nav-link {
+      color: white;
+      font-weight: 500;
+      transition: opacity 0.2s ease;
+    }
+    
+    .nav-link:hover {
+      opacity: 0.8;
+      color: white;
+    }
+    
+    .nav-link.active {
+      border-bottom: 2px solid white;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .form-container {
+      max-width: 500px;
+      margin: 2rem auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+      padding: 2rem;
+    }
+    
+    .form-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #3f51b5;
+    }
+    
+    .form-button {
+      width: 100%;
+      padding: 1rem;
+      background-color: #3f51b5;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    
+    .form-button:hover {
+      background-color: #303f9f;
+    }
+    
+    .form-footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: #757575;
+    }
+    
+    .form-footer a {
+      color: #3f51b5;
+      font-weight: 500;
+    }
+    
+    .alert {
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    
+    .alert-danger {
+      background-color: rgba(244, 67, 54, 0.1);
+      color: #f44336;
+      border: 1px solid rgba(244, 67, 54, 0.2);
+    }
+    
+    .footer {
+      background-color: #303f9f;
+      color: white;
+      padding: 2rem 0;
+      margin-top: 3rem;
+    }
+    
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+    
+    .footer-section h3 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    
+    .footer-links {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .footer-link {
+      margin-bottom: 0.5rem;
+    }
+    
+    .footer-link a {
+      color: rgba(255, 255, 255, 0.8);
+      transition: color 0.2s ease;
+    }
+    
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 2rem;
+    }
+    
+    .input-group {
+      position: relative;
+    }
+    
+    .input-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #757575;
+    }
+    
+    .form-input {
+      padding-left: 35px;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="/" class="logo">
+        <i class="fas fa-shopping-bag"></i>
+        <span style="color: #ff5252; font-weight: bold;">Fake</span>ShopSmart
+      </a>
+      <div style="background-color: #ff5252; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);">
+        This is a fake website for security research
+      </div>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="/#categories" class="nav-link">Categories</a></li>
+          <li class="nav-item"><a href="/cart" class="nav-link">Cart</a></li>
+          <li class="nav-item"><a href="/login" class="nav-link">Login</a></li>
+          <li class="nav-item"><a href="/signup" class="nav-link active">Sign Up</a></li>
+          <li class="nav-item"><a href="/admin_login" class="nav-link">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Signup Form -->
+  <div class="container">
+    <div class="form-container">
+      <h2 class="form-title">Create Your Account</h2>
+      
+      {% if message %}
+        <div class="alert alert-danger">{{ message }}</div>
+      {% endif %}
+      
+      <form method="POST" action="/signup">
+        <div class="form-group">
+          <label for="username" class="form-label">Username</label>
+          <div class="input-group">
+            <span class="input-icon"><i class="fas fa-user"></i></span>
+            <input type="text" name="username" id="username" class="form-input" placeholder="Choose a username" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <div class="input-group">
+            <span class="input-icon"><i class="fas fa-envelope"></i></span>
+            <input type="email" name="email" id="email" class="form-input" placeholder="Enter your email" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <span class="input-icon"><i class="fas fa-lock"></i></span>
+            <input type="password" name="password" id="password" class="form-input" placeholder="Create a password" required>
+          </div>
+        </div>
+        
+        <!-- Hidden honeypot field -->
+        <input type="text" name="honeypot_field" style="display:none;" />
+        
+        <div class="form-group">
+          <button type="submit" class="form-button">
+            <i class="fas fa-user-plus"></i> Sign Up
+          </button>
+        </div>
+      </form>
+      
+      <div class="form-footer">
+        <p>Already have an account? <a href="/login">Login now</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-section">
+        <h3>ShopSmart</h3>
+        <ul class="footer-links">
+          <li class="footer-link"><a href="#">About Us</a></li>
+          <li class="footer-link"><a href="#">Careers</a></li>
+          <li class="footer-link"><a href="#">Press</a></li>
+          <li class="footer-link"><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Customer Service</h3>
+        <ul class="footer-links">
+          <li class="footer-link"><a href="#">Help Center</a></li>
+          <li class="footer-link"><a href="#">Contact Us</a></li>
+          <li class="footer-link"><a href="#">Report Abuse</a></li>
+          <li class="footer-link"><a href="#">Submit Feedback</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Policy</h3>
+        <ul class="footer-links">
+          <li class="footer-link"><a href="#">Return Policy</a></li>
+          <li class="footer-link"><a href="#">Terms of Use</a></li>
+          <li class="footer-link"><a href="#">Security</a></li>
+          <li class="footer-link"><a href="#">Privacy</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Connect with Us</h3>
+        <ul class="footer-links">
+          <li class="footer-link"><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+          <li class="footer-link"><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+          <li class="footer-link"><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+          <li class="footer-link"><a href="#"><i class="fab fa-youtube"></i> YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; 2025 <span style="color: #ff5252; font-weight: bold;">Fake</span>ShopSmart. This is a honeypot website for security research.</p>
+    </div>
+  </footer>
+</body>
+</html>
