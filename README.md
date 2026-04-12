@@ -5,7 +5,7 @@
 **High-level structure:** 4-layer FastAPI (client → middleware → honeypot engine → async AI/log).
 
 ```
-Backend/
+src/
 ├── app/                    # FastAPI core
 │   ├── main.py             # App factory, middleware/routers mount
 │   ├── routers/            # Trap + admin routes
@@ -44,7 +44,7 @@ Backend/
 │   ├── Dockerfile
 │   └── docker-compose.yml  # postgres/redis/prometheus
 ├── templates/ static/      # Reused Flask honeypot UI
-├── Backend/attack_logs.json # NDJSON fallback
+├── src/attack_logs.json # NDJSON fallback
 ├── .env.example            # Copy → .env (DB/Supabase/Redis/HF)
 └── requirements.txt        # FastAPI/transformers/asyncpg/alembic/redis/arq/JWT/slowapi/prometheus
 
@@ -61,10 +61,11 @@ Backend/
 5. **BackgroundTasks**: SessionService Redis inc count, LoggingService dual PG/NDJSON, Geo enrich
 6. Prometheus counter++ , resp attacker
 
-## Run Local (Backend/)
+## Run Local (src/)
 ```
+cd src
 pip install -r requirements.txt
-cp ../.env.example ../.env  # Set postgres URL
+cp .env.example .env  # Set postgres URL
 alembic upgrade head
 uvicorn app.main:app --reload
 ```
@@ -81,7 +82,7 @@ curl -X POST http://localhost:8000/api/checkout -d 'card=4111111111111111&cvv=12
 curl http://localhost:8000/health ; curl http://localhost:8000/metrics
 
 # Logs
-tail -f attack_logs.json ; psql -d honeypot -c 'SELECT * FROM attack_logs ORDER BY created_at DESC LIMIT 5;'
+tail -f src/attack_logs.json ; psql -d honeypot -c 'SELECT * FROM attack_logs ORDER BY created_at DESC LIMIT 5;'
 ```
 
 **Docker:** `docker compose up`.
@@ -89,3 +90,4 @@ tail -f attack_logs.json ; psql -d honeypot -c 'SELECT * FROM attack_logs ORDER 
 Roadmap extensions: ARQ worker ML jobs, Supabase RLS, CI pytest/ruff/mypy, fine-tune HF threat model.
 
 Honeypot live!
+

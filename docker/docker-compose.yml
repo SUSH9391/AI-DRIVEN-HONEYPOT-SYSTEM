@@ -10,7 +10,7 @@ services:
       - postgres
       - redis
     volumes:
-      - ./Backend:/app  # dev
+      - ./src:/app  # dev
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   postgres:

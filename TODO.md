@@ -1,14 +1,23 @@
-# GitHub Repo Initialization TODO
+# GitHub Repo Complete!
 
-## Steps:
-- [ ] 1. Delete deprecated folders (frontend/, e-commerce website/)
-- [ ] 2. Update .gitignore if needed
-- [ ] 3. Update README.md with repo instructions
-- [ ] 4. Install GitHub CLI (gh)
-- [ ] 5. git init, add ., commit initial
-- [ ] 6. gh auth login (interactive)
-- [ ] 7. gh repo create AI-Driven-Honeypot-System --public --push
-- [ ] 8. Verify: git remote -v
+Repo force-pushed to https://github.com/SUSH9391/AI-DRIVEN-HONEYPOT-SYSTEM.git
 
-Current progress: Starting step 1.
+Local Git setup:
+- Init + initial commit (49d9799)
+- Deprecated folders deleted
+- Branch: main
+- Remote: origin
+
+Test honeypot:
+```
+cd Backend
+pip install -r requirements.txt
+cp .env.example .env  # edit DB etc.
+alembic upgrade head
+uvicorn app.main:app --reload
+```
+
+Visit http://localhost:8000 for Flask honeypot UI.
+
+Done!
 
