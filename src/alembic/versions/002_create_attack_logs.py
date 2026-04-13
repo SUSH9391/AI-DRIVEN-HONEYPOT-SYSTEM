@@ -45,7 +45,7 @@ def upgrade() -> None:
     op.create_table('users',
         sa.Column('id', postgresql.UUID(as_uuid=True), server_default=text('gen_random_uuid()'), nullable=False),
         sa.Column('email', sa.String(), nullable=False),
-        sa.Column('role', sa.String(), nullable=False, default_='admin'),
+        sa.Column('role', sa.String(), nullable=False, server_default='admin'),
         sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
         sa.PrimaryKeyConstraint('id'),
         sa.UniqueConstraint('email')

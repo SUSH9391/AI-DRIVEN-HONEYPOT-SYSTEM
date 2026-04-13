@@ -10,8 +10,8 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+# if config.config_file_name is not None:
+#     fileConfig(config.config_file_name)
 
 # Import models
 from core.database import Base
@@ -19,8 +19,9 @@ from app.models.attack_log import AttackLog, Session, User
 target_metadata = Base.metadata
 
 # Set SQLAlchemy URL from config
+from core.config import settings
 if config.get_main_option("sqlalchemy.url") is None:
-    config.set_main_option("sqlalchemy.url", "postgresql+asyncpg://user:pass@localhost:5432/honeypot")
+    config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
