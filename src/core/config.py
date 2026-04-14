@@ -34,7 +34,7 @@ class Settings(BaseSettings):
         return self
 
     class Config:
-        env_file = ".env"  # Project root
+        env_file = (".env", "../.env", "../../.env")  # Project root
 
 settings = Settings()
 

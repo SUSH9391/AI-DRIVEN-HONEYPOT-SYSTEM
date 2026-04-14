@@ -17,7 +17,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
             "user_agent": request.headers.get("user-agent"),
             "status_code": response.status_code,
             "process_time": process_time,
-            "size": len(response.body or b"")
+            "size": int(response.headers.get("content-length", 0))
         }
         
         # Structured log to console (Prometheus/ELK later)

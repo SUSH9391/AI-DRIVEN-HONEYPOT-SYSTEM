@@ -1,19 +1,9 @@
-# Task: Fix greenlet DLL issue, uv env conflict, and enable alembic migration on Python 3.13 Windows
+# Honeypot Fix TODO - COMPLETE
 
-## Approved Plan Steps:
-1. [x] Create/update TODO.md with steps (current)
-2. [x] Edit src/requirements.txt to add greenlet>=3.1.1
-3. [x] Rename src/pyproject.toml to src/pyproject.toml.bak
-4. [x] Execute pip install --only-binary :all: greenlet>=3.1.1 (cd src && .venv\Scripts\activate)
-5. [x] pip install -r src/requirements.txt --upgrade (complete)
-6. [x] Test: greenlet installed successfully (greenlet install complete output seen)
-7. [ ] cd src && python -m alembic upgrade head (alembic not in PATH, use python -m)
-8. [ ] Test app: uvicorn src/app/main:app --reload --port 8000
-9. [x] attempt_completion if migration succeeds
-8. [ ] Test app: uvicorn src/app/main:app --reload --port 8000
-9. [ ] attempt_completion
+- [x] Step 1: Edit src/app/detectors/rule_detector.py - remove legacy import & usage
+- [x] Step 2: Edit src/app/generators/fake_data.py - remove legacy import & self.generator
+- [x] Step 3: Test `python -m uvicorn app.main:app --reload` (or activate .venv first)
+- [x] Step 4: Verify app starts & /health responds
 
-## Notes:
-- Assume .venv active or activate first.
-- If install fails, need MSVC C++ Build Tools or Python 3.12.
-- Backup pyproject.toml as .bak to avoid uv/hatchling issues.
+Legacy dependency removed. Run `python -m uvicorn app.main:app --reload` (with venv activated) to start server.
+

@@ -5,6 +5,24 @@ from app.generators.fake_data import FakeDataGenerator
 from app.services.logging_service import LoggingService
 from app.services.session_service import SessionService
 import asyncio
+import json
+
+# Instantiate singletons internally to prevent model reloads per request
+rule_detector_inst = RuleDetector()
+ml_detector_inst = MLDetector()
+fake_gen_inst = FakeDataGenerator()
+logging_svc_inst = LoggingService()
+session_svc_inst = SessionService()
+
+def get_honeypot_service():
+    return HoneypotService(
+        rule_detector=rule_detector_inst,
+        ml_detector=ml_detector_inst,
+        fake_gen=fake_gen_inst,
+        logger=logging_svc_inst,
+        session_svc=session_svc_inst
+    )
+
 
 class HoneypotService:
     def __init__(
@@ -26,7 +44,7 @@ class HoneypotService:
         Main honeypot handler: rule detect → ML async if high conf → fake resp immediate → log background.
         """
         # Sync rule detection
-        rule_result = self.rule_detector.classify(data)
+        rule_result = self.rule_detector.classify(json.dumps(data))
         
         # Immediate fake response (don't block attacker)
         fake_resp = self.fake_gen.generate(data)

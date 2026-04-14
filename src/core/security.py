@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Request, Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import jwt
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
@@ -6,18 +6,21 @@ from core.config import settings
 
 security = HTTPBearer(auto_error=False)
 
-async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
-) -> dict | None:
+async def get_current_user(request: Request) -> dict | None:
     """
     Validate Supabase JWT. Returns None for anonymous (honeypot allows).
     """
-    if not credentials:
+    auth_header = request.headers.get("Authorization")
+    if not auth_header:
         return None  # Anonymous OK for honeypot routes
     
     try:
+        scheme, token = auth_header.split()
+        if scheme.lower() != "bearer":
+            return None
+        
         payload = jwt.decode(
-            credentials.credentials,
+            token,
             settings.SUPABASE_JWT_SECRET,
             algorithms=["HS256"],
             audience="authenticated",

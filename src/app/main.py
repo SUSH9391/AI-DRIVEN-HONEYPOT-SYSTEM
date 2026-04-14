@@ -2,7 +2,10 @@ from fastapi import FastAPI, Request, BackgroundTasks, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from app.routers import honeypot, admin, health
-from app.middleware import RateLimitMiddleware, AuthMiddleware, FingerprintMiddleware, LoggingMiddleware
+from app.middleware import AuthMiddleware, FingerprintMiddleware, LoggingMiddleware
+from app.middleware.rate_limit import limiter
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from core.database import engine, Base
 from prometheus_fastapi_instrumentator import Instrumentator
 import uvicorn
@@ -18,10 +21,13 @@ def create_app():
             await conn.run_sync(Base.metadata.create_all)
     
     # Middleware stack
-    app.add_middleware(RateLimitMiddleware)
     app.add_middleware(AuthMiddleware)
     app.add_middleware(FingerprintMiddleware)
     app.add_middleware(LoggingMiddleware)
+    
+    # Rate Limiter Global
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
     
     # Routers
     app.include_router(honeypot.router)

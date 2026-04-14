@@ -1,11 +1,9 @@
 from typing import Dict, Any, List
-from honeypot_system_hf_merged import HoneypotHFGenerator as LegacyGenerator
 from core.config import settings
 import re
 
 class FakeDataGenerator:
     def __init__(self):
-        self.generator = LegacyGenerator(api_key=settings.HF_API_KEY)
         self.fake_products = []  # From products.py
 
     def generate(self, data: Dict[str, Any]) -> Dict[str, Any]:
