@@ -1,1 +1,0 @@
-- [x] Edit src/core/config.py to add ConfigDict(extra='ignore')\n- [x] Test: Rerun uvicorn src.app.main:app --reload (pending user test)\n- [x] Verify app starts and /health endpoint works (pending user test)
