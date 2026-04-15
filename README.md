@@ -61,14 +61,42 @@ src/
 5. **BackgroundTasks**: SessionService Redis inc count, LoggingService dual PG/NDJSON, Geo enrich
 6. Prometheus counter++ , resp attacker
 
-## Run Local (src/)
-```
-cd src
-pip install -r requirements.txt
-cp .env.example .env  # Set postgres URL
-alembic upgrade head
-uvicorn app.main:app --reload
-```
+## Run Local & Contribution Setup
+
+To ensure you have the correct dependencies and isolated environment, please follow these steps when you fork or clone the repository:
+
+1. **Install `uv`** (our lightning-fast Python package installer):
+   ```bash
+   pip install uv
+   ```
+
+2. **Create and Activate a Virtual Environment:**
+   Run the following in the project root to create `.venv`:
+   ```bash
+   uv venv
+   ```
+   - On **Windows**: `.\.venv\Scripts\activate` or `.\.venv\Scripts\Activate.ps1` (for PowerShell)
+   - On **Mac/Linux**: `source .venv/bin/activate`
+
+3. **Install Dependencies:**
+   Sync the dependencies quickly via `uv`:
+   ```bash
+   uv sync
+   ```
+   *(Running `python -m pip install -e .` or `pip install -r requirements.txt` is no longer needed since `uv sync` manages everything in lockstep!)*
+
+4. **Environment Configuration:**
+   ```bash
+   cp .env.example .env
+   ```
+   *Note: Open `.env` and set your Supabase Postgres URL and Huggingface API Key.*
+
+5. **Run the Application:**
+   Make sure you run the app from inside the `src` directory so it finds `app.main`:
+   ```bash
+   cd src
+   uvicorn app.main:app --reload
+   ```
 
 ## Test
 ```
