@@ -4,9 +4,12 @@ from sqlalchemy.pool import NullPool
 from core.config import settings
 
 engine = create_async_engine(
-    settings.DATABASE_URL, 
-    poolclass=NullPool,  # No connection pooling for production PG
-    echo=settings.ENVIRONMENT == "development"
+    settings.DATABASE_URL,
+    poolclass=NullPool,
+    echo=settings.ENVIRONMENT == "development",
+    connect_args={
+        "ssl": "require"
+    }
 )
 
 async_session = async_sessionmaker(

@@ -1,8 +1,9 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import model_validator
 from typing import Optional
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=(".env", "../.env", "../../.env"), extra="ignore")
     # Database
     user: Optional[str] = None
     password: Optional[str] = None
@@ -12,9 +13,9 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://user:pass@localhost:5432/honeypot"
     
     # Supabase Auth
-    SUPABASE_URL: str
-    SUPABASE_ANON_KEY: str
-    SUPABASE_JWT_SECRET: str
+    SUPABASE_URL: Optional[str] = "http://dummy"
+    SUPABASE_ANON_KEY: Optional[str] = "dummy"
+    SUPABASE_JWT_SECRET: Optional[str] = "dummy"
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379"
@@ -33,8 +34,4 @@ class Settings(BaseSettings):
             self.DATABASE_URL = f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.dbname}?sslmode=require"
         return self
 
-    class Config:
-        env_file = (".env", "../.env", "../../.env")  # Project root
-
 settings = Settings()
-

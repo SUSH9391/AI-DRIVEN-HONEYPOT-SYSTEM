@@ -1,0 +1,57 @@
+#  Virtual environments (VERY IMPORTANT)
+.venv
+**/.venv
+venv
+**/venv
+
+#  Python cache files
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+#  Build / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+#  Environment & secrets
+.env
+.env.*
+*.env
+
+#  Testing / coverage
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+Dockerfile*
+docker-compose*
+.dockerignore
+
+
+.git
+.gitignore
+
+#  OS files
+.DS_Store
+Thumbs.db
+
+#  Logs
+*.log
+
+#  Node (if any frontend exists)
+node_modules/
+
+#  Misc
+tmp/
+temp/
