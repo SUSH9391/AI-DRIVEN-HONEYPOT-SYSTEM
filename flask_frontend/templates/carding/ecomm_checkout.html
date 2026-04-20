@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: white; color: #333; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; border-radius: 8px; overflow: hidden; padding: 2rem;">
+    
+    <div style="text-align: center; margin-bottom: 2rem; border-bottom: 1px solid #eaeaea; padding-bottom: 1rem;">
+        <h1 style="color: #ff6600; font-size: 2rem; letter-spacing: -1px; margin: 0;">QuickShop <span style="color: #333; font-size: 1.5rem; font-weight: normal;">| Secure Checkout</span></h1>
+    </div>
+
+    <div style="display: flex; gap: 4rem; max-width: 1000px; margin: 0 auto; flex-wrap: wrap;">
+        <!-- Order Summary -->
+        <div style="flex: 1; min-width: 300px;">
+            <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">Order Summary</h2>
+            <div style="border: 1px solid #eaeaea; border-radius: 8px; padding: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #f5f5f5;">
+                    <div style="display: flex; gap: 1rem;">
+                        <div style="width: 60px; height: 60px; background: #f5f5f5; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">📱</div>
+                        <div>
+                            <div style="font-weight: bold;">ProX Smartphone 5G</div>
+                            <div style="color: #666; font-size: 0.9rem;">Qty: 1</div>
+                        </div>
+                    </div>
+                    <div style="font-weight: bold;">$899.00</div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #666;">
+                    <span>Subtotal</span>
+                    <span>$899.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: #666; border-bottom: 1px solid #eaeaea; padding-bottom: 1rem;">
+                    <span>Shipping</span>
+                    <span style="color: #10b981;">Free</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: bold;">
+                    <span>Total</span>
+                    <span>$899.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Form -->
+        <div style="flex: 1.5; min-width: 300px;">
+            <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">Payment Information</h2>
+            <form action="{{ url_for('sandbox.attack') }}" method="POST">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Cardholder Name</label>
+                    <input type="text" name="name" style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px;" placeholder="John Doe" required>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Card Number</label>
+                    <input type="text" name="card_number" style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-family: monospace; font-size: 1.1rem;" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Expiry Date</label>
+                        <input type="text" name="expiry" style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px;" placeholder="MM/YY" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">CVV</label>
+                        <input type="text" name="cvv" style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px;" placeholder="123" maxlength="4" required>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Billing Address</label>
+                    <input type="text" name="address" style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 0.5rem;" placeholder="Street Address" required>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="text" name="city" style="flex: 2; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px;" placeholder="City" required>
+                        <input type="text" name="zip" style="flex: 1; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px;" placeholder="ZIP" required>
+                    </div>
+                </div>
+                
+                <button type="submit" style="width: 100%; background: #ff6600; color: white; border: none; padding: 1rem; font-size: 1.1rem; font-weight: bold; border-radius: 4px; cursor: pointer; transition: background 0.3s;">Place Order - $899.00</button>
+                <div style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.85rem;">🔒 AES-256 Bit Encryption guarantees secure processing.</div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/score_overlay.html' %}
+{% endblock %}

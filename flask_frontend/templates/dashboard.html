@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 900px; margin: 0 auto;">
+    <h1 style="margin-bottom: 0.5rem;">Welcome back, {{ username }}</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Level {{ stats.level }} Hacker | {{ stats.total_xp }} XP</p>
+
+    <div style="margin-bottom: 3rem;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span>Level Progress</span>
+            <span>{{ progress_pct }}% to next level</span>
+        </div>
+        <div class="xp-container">
+            <div class="xp-bar" style="width: {{ progress_pct }}%"></div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2" style="gap: 2rem;">
+        <div>
+            <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.5rem;">Your Badges</h2>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                {% if stats.badges %}
+                    {% for badge in stats.badges %}
+                        <div class="badge-earned" title="{{ badge }}">{{ badge[:1] }}</div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">No badges earned yet. Go hack something!</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.25rem; m-0">Recent Activity</h2>
+                <a href="{{ url_for('environments.index') }}" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Labs &rarr;</a>
+            </div>
+            
+            {% if stats.attack_history %}
+                <ul style="list-style: none;">
+                {% for attack in stats.attack_history %}
+                    <li style="padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between;">
+                        <span>{{ attack.type }}</span>
+                        <span style="color: #34d399;">+{{ attack.xp }} XP</span>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: var(--text-muted); font-size: 0.9rem;">No attacks recorded in recent history.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

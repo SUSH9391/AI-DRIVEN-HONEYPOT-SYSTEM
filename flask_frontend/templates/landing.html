@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="glass-card" style="text-align: center; padding: 4rem 2rem; margin-top: 4rem;">
+    <h1 style="font-size: 3.5rem; margin-bottom: 1rem; background: linear-gradient(90deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Attack. Detect. Level Up.</h1>
+    <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 3rem auto; line-height: 1.6;">
+        Master cybersecurity by attacking real-world simulated environments. Evolve your skills while an AI-driven honeypot evaluates your payloads in real-time.
+    </p>
+    
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 4rem;">
+        <a href="{{ url_for('auth.signup') }}" class="btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">Start Hacking</a>
+        <a href="{{ url_for('auth.login') }}" class="btn-secondary" style="font-size: 1.1rem; padding: 1rem 2rem;">Login</a>
+    </div>
+
+    <h2 style="margin-bottom: 2rem;">Explore the Simulation Environments</h2>
+    <div class="grid grid-cols-4">
+        <div class="glass-card" style="padding: 1.5rem;">
+            <h3 style="color: #60a5fa; margin-bottom: 0.5rem;">SQL Injection</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Bypass auth systems in corporate SSO portals and banking platforms.</p>
+        </div>
+        <div class="glass-card" style="padding: 1.5rem;">
+            <h3 style="color: #34d399; margin-bottom: 0.5rem;">XSS</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Inject scripts into social media feeds and community forums.</p>
+        </div>
+        <div class="glass-card" style="padding: 1.5rem;">
+            <h3 style="color: #fbbf24; margin-bottom: 0.5rem;">Carding</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Analyze e-commerce checkouts and gift card purchase systems.</p>
+        </div>
+        <div class="glass-card" style="padding: 1.5rem;">
+            <h3 style="color: #f87171; margin-bottom: 0.5rem;">Path Traversal</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Extract sensitive server files from internal admin panels.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

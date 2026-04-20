@@ -77,8 +77,10 @@ class User(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         UUID, primary_key=True, server_default=func.gen_random_uuid()
     )
-    email: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    role: Mapped[str] = mapped_column(String, default="admin")
+    supabase_uid: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    username: Mapped[str] = mapped_column(String, nullable=False)
+    total_xp: Mapped[int] = mapped_column(default=0)
+    level: Mapped[int] = mapped_column(default=1)
     created_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )

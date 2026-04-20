@@ -16,6 +16,7 @@ config = context.config
 # Import models
 from core.database import Base
 from app.models.attack_log import AttackLog, Session, User
+from app.models.sandbox import SandboxSession, Badge
 target_metadata = Base.metadata
 
 # Set SQLAlchemy URL from config

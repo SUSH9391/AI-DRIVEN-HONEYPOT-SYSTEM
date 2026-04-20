@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: #222; color: #ddd; font-family: 'Roboto', sans-serif; min-height: 70vh; border-radius: 8px; overflow: hidden; padding: 2rem;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h1 style="color: #fff; margin-bottom: 0.5rem; padding-bottom: 1rem; border-bottom: 1px solid #444;">DevTalk Community Forums</h1>
+        <div style="padding: 1rem 0; color: #bbb; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+            <span>Home</span> &raquo; <span>General Discussion</span> &raquo; <span style="color: #fff;">Help parsing HTML inputs</span>
+        </div>
+        
+        <!-- Post 1 -->
+        <div style="background: #2a2a2a; border-left: 3px solid #ff4444; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+            <div style="padding: 0.5rem 1rem; background: #333; display: flex; justify-content: space-between; font-size: 0.85rem;">
+                <span style="font-weight: bold; color: #ff9999;">OpCoder</span>
+                <span>Posted yesterday, 14:22</span>
+            </div>
+            <div style="padding: 1.5rem; display: flex; gap: 1.5rem;">
+                <div style="width: 80px; text-align: center;">
+                    <div style="width: 60px; height: 60px; background: #555; border-radius: 4px; margin: 0 auto 0.5rem auto;"></div>
+                    <div style="font-size: 0.75rem; color: #888;">Posts: 124</div>
+                </div>
+                <div style="flex: 1; line-height: 1.6;">
+                    Hey all, I'm building a simple blog and I'm allowing users to embed standard HTML in their posts. How do I make sure they don't run scripts? Is regex replacing <script> enough?
+                </div>
+            </div>
+        </div>
+
+        {% if score and score.attack_detected %}
+            <div style="background: #2a2a2a; border-left: 3px solid #44ff44; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                <div style="padding: 0.5rem 1rem; background: #333; display: flex; justify-content: space-between; font-size: 0.85rem;">
+                    <span style="font-weight: bold; color: #99ff99;">You (Simulated)</span>
+                    <span>Just now</span>
+                </div>
+                <div style="padding: 1.5rem; display: flex; gap: 1.5rem;">
+                    <div style="flex: 1; color: #ffeb3b;">
+                        <em>XSS Payload executed in browser context:</em><br>
+                        <code>{{ request.form.get('reply') }}</code>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div style="background: #2a2a2a; padding: 2rem; margin-top: 2rem;">
+            <h3 style="color: #fff; margin-bottom: 1rem;">Post a Reply</h3>
+            <form action="{{ url_for('sandbox.attack') }}" method="POST">
+                <textarea name="reply" rows="6" style="width: 100%; background: #111; border: 1px solid #444; color: #eee; padding: 1rem; margin-bottom: 1rem; font-family: monospace; border-radius: 4px;" required placeholder="Type your reply here... HTML is allowed!"></textarea>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 0.75rem 2rem; border-radius: 4px; font-weight: bold; cursor: pointer;">Submit Reply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/score_overlay.html' %}
+{% endblock %}

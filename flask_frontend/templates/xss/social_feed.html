@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: #f0f2f5; color: #050505; font-family: Helvetica, Arial, sans-serif; min-height: 70vh; border-radius: 8px; overflow: hidden;">
+    <div style="background: white; border-bottom: 1px solid #ddd; padding: 0.5rem 1rem; display: flex; align-items: center; position: sticky; top: 0; z-index: 10;">
+        <div style="width: 40px; height: 40px; background: #1877f2; border-radius: 50%; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.5rem; margin-right: 1rem;">n</div>
+        <input type="text" placeholder="Search Nexus..." style="background: #f0f2f5; border: none; padding: 0.5rem 1rem; border-radius: 20px; width: 250px; outline: none;">
+    </div>
+    
+    <div style="max-width: 600px; margin: 2rem auto; padding-bottom: 2rem;">
+        <!-- Demo Post -->
+        <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                <div style="width: 40px; height: 40px; background: #10b981; border-radius: 50%; margin-right: 0.75rem;"></div>
+                <div>
+                    <strong style="display: block;">Jane Doe</strong>
+                    <span style="color: #65676b; font-size: 0.8rem;">2 hours ago</span>
+                </div>
+            </div>
+            <p style="margin-bottom: 1rem;">Just finished learning about web vulnerabilities! It's crazy how easy some platforms are to exploit if developers aren't careful.</p>
+            
+            {% if score and score.attack_detected %}
+                <div style="background: #fff3cd; color: #856404; padding: 1rem; border-left: 4px solid #ffeeba; margin-top: 1rem; border-radius: 4px; overflow-wrap: break-word;">
+                    <em>Injected Content Blocked:</em><br>
+                    <code style="display: inline-block; margin-top: 0.5rem; word-break: break-all;">{{ request.form.get('comment') }}</code>
+                </div>
+            {% endif %}
+
+            <div style="border-top: 1px solid #ebedf0; padding-top: 1rem; margin-top: 1rem;">
+                <form action="{{ url_for('sandbox.attack') }}" method="POST" style="display: flex; gap: 0.5rem;">
+                    <div style="width: 32px; height: 32px; background: #cbd5e1; border-radius: 50%; flex-shrink: 0;"></div>
+                    <input type="text" name="comment" placeholder="Write a comment..." style="flex: 1; background: #f0f2f5; border: none; padding: 0.5rem 1rem; border-radius: 20px; outline: none;" required>
+                    <button type="submit" style="background: none; border: none; color: #1877f2; font-weight: bold; cursor: pointer; padding: 0 0.5rem;">Post</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/score_overlay.html' %}
+{% endblock %}

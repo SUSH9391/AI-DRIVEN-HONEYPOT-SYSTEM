@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin-bottom: 3rem;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Simulation Labs</h1>
+    <p style="color: var(--text-muted); font-size: 1.1rem;">Select an environment to attack. Labs above your level are locked.</p>
+</div>
+
+<div class="grid grid-cols-2" style="gap: 2rem;">
+    {% for env in environments %}
+        <div class="glass-card" style="display: block; position: relative; overflow: hidden; {% if not env.unlocked %}opacity: 0.6; pointer-events: none;{% endif %}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                <h2 style="font-size: 1.5rem;">{{ env.name }}</h2>
+                <div style="color: #fbbf24; font-size: 1.2rem;">
+                    {% for _ in range(env.difficulty) %}★{% endfor %}
+                </div>
+            </div>
+            
+            <p style="color: var(--text-muted); margin-bottom: 2rem; min-height: 40px;">{{ env.desc }}</p>
+            
+            {% if env.unlocked %}
+                <form action="{{ url_for('sandbox.create') }}" method="POST">
+                    <input type="hidden" name="env_type" value="{{ env.id }}">
+                    <button type="submit" class="btn-secondary" style="width: 100%;">Enter Lab</button>
+                </form>
+            {% else %}
+                <button class="btn-secondary" disabled style="width: 100%; cursor: not-allowed; background: rgba(0,0,0,0.5);">
+                    🔒 Locked (Reach Level {{ env.difficulty - 1 }})
+                </button>
+            {% endif %}
+            
+            {% if env.id == 'sqli' %}
+                <div style="position: absolute; right: -20px; bottom: -20px; opacity: 0.1; font-size: 8rem;">🗃️</div>
+            {% elif env.id == 'xss' %}
+                <div style="position: absolute; right: -20px; bottom: -20px; opacity: 0.1; font-size: 8rem;">💬</div>
+            {% elif env.id == 'carding' %}
+                <div style="position: absolute; right: -20px; bottom: -20px; opacity: 0.1; font-size: 8rem;">💳</div>
+            {% else %}
+                <div style="position: absolute; right: -20px; bottom: -20px; opacity: 0.1; font-size: 8rem;">📂</div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

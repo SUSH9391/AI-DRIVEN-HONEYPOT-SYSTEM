@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: white; border: 1px solid #dee2e6; color: #212529; font-family: -apple-system, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; min-height: 70vh; border-radius: 4px; display: flex; flex-direction: column;">
+    
+    <!-- Header -->
+    <div style="background: #f8f9fa; padding: 1rem; border-bottom: 1px solid #dee2e6; display: flex; align-items: center; gap: 1rem;">
+        <div style="font-size: 1.5rem;">⚙️</div>
+        <div style="font-weight: 500; font-size: 1.2rem;">ServerAdmin Control Panel</div>
+        <div style="margin-left: auto; text-align: right; font-size: 0.85rem; color: #6c757d;">
+            Connected: ubuntu@prod-web-01
+        </div>
+    </div>
+    
+    <div style="display: flex; flex: 1;">
+        <!-- Sidebar Navigation -->
+        <div style="width: 220px; border-right: 1px solid #dee2e6; background: #fff;">
+            <ul style="list-style: none; margin: 0; padding: 1rem 0;">
+                <li style="padding: 0.75rem 1rem; border-left: 3px solid transparent; color: #6c757d;">📊 Server Status</li>
+                <li style="padding: 0.75rem 1rem; border-left: 3px solid transparent; color: #6c757d;">🌐 Nginx Config</li>
+                <li style="padding: 0.75rem 1rem; border-left: 3px solid #0d6efd; background: #e9ecef; font-weight: 500;">📖 Log Viewer</li>
+                <li style="padding: 0.75rem 1rem; border-left: 3px solid transparent; color: #6c757d;">🔄 Restarts</li>
+            </ul>
+        </div>
+        
+        <!-- Main Form Area -->
+        <div style="flex: 1; padding: 2rem;">
+            <h3 style="margin-bottom: 0.5rem; font-weight: 500;">System Log Diagnostics</h3>
+            <p style="color: #6c757d; font-size: 0.9rem; margin-bottom: 2rem;">Utility to view contents of local server files (typically /var/log/*).</p>
+            
+            <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 1.5rem;">
+                <form action="{{ url_for('sandbox.attack') }}" method="POST">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">File Path</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" name="log_file" value="syslog" style="flex: 1; padding: 0.75rem; border: 1px solid #ced4da; border-radius: 4px;" required>
+                        <button type="submit" style="background: #0d6efd; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500;">Read File</button>
+                    </div>
+                    <small style="color: #6c757d; display: block; margin-top: 0.5rem;">Files are read relative to <code>/var/log/</code> unless an absolute path is provided.</small>
+                </form>
+            </div>
+
+            {% if score and score.attack_detected %}
+                <div style="margin-top: 2rem;">
+                    <h4 style="margin-bottom: 0.5rem; color: #dc3545;">[Exception] Illegal Path Detected</h4>
+                    <div style="background: #212529; color: #20c997; padding: 1rem; border-radius: 4px; font-family: monospace; white-space: pre-wrap; font-size: 0.85rem; border-left: 4px solid #dc3545;">
+Warning: Open logic trapped on absolute escape.
+Input: {{ request.form.get('log_file') }}
+Stack Trace:
+  File "/var/www/admin/logger.py", line 42, in read_file
+    with open('/var/log/' + input_path, 'r') as f:
+FileNotFoundError: [Errno 2] No such file or directory.
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% include 'partials/score_overlay.html' %}
+{% endblock %}

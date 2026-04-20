@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     HF_MODEL_NAME: str = "distilbert-base-uncased-finetuned-sst-2-english"  # Change to threat classifier
     HF_API_KEY: Optional[str] = None
     
+    # Dual-Service Architecture
+    FASTAPI_SERVICE_TOKEN: str = "dummy_token"
+    
     # App
     LOG_LEVEL: str = "INFO"
     ENVIRONMENT: str = "development"

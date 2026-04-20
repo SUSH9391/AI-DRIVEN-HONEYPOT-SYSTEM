@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: #1e1e1e; border: 1px solid #333; color: white; font-family: 'Courier New', Courier, monospace; min-height: 70vh; border-radius: 4px; display: flex; flex-direction: column;">
+    <div style="background: #333; padding: 0.5rem 1rem; border-bottom: 1px solid #444; display: flex; align-items: center; gap: 1rem;">
+        <div style="display: flex; gap: 0.5rem;">
+            <div style="width: 12px; height: 12px; background: #ff5f56; border-radius: 50%;"></div>
+            <div style="width: 12px; height: 12px; background: #ffbd2e; border-radius: 50%;"></div>
+            <div style="width: 12px; height: 12px; background: #27c93f; border-radius: 50%;"></div>
+        </div>
+        <div style="font-weight: bold; font-size: 0.9rem;">FileVault Internal Directory Browser v2.1</div>
+    </div>
+    
+    <div style="display: flex; flex: 1;">
+        <!-- Sidebar -->
+        <div style="width: 250px; border-right: 1px solid #333; padding: 1rem; background: #252526;">
+            <h3 style="color: #ccc; font-size: 0.85rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px;">Places</h3>
+            <ul style="list-style: none; padding: 0; font-size: 0.9rem;">
+                <li style="padding: 0.5rem; background: #37373d; border-radius: 4px; margin-bottom: 0.25rem;">📁 /var/www/html</li>
+                <li style="padding: 0.5rem; margin-bottom: 0.25rem; color: #aaa;">📁 /var/log/app</li>
+                <li style="padding: 0.5rem; margin-bottom: 0.25rem; color: #aaa;">📁 /tmp/uploads</li>
+                <li style="padding: 0.5rem; margin-bottom: 0.25rem; color: #aaa;">📁 /mnt/storage</li>
+            </ul>
+        </div>
+        
+        <!-- Main Area -->
+        <div style="flex: 1; display: flex; flex-direction: column;">
+            <div style="padding: 1rem; border-bottom: 1px solid #333; background: #2d2d30; display: flex; gap: 1rem; align-items: center;">
+                <span style="color: #aaa;">Path:</span>
+                <form action="{{ url_for('sandbox.attack') }}" method="POST" style="flex: 1; display: flex; gap: 0.5rem;">
+                    <input type="text" name="dir_path" value="/var/www/html/public" style="flex: 1; background: #1e1e1e; border: 1px solid #444; color: white; padding: 0.5rem; font-family: monospace;" required>
+                    <button type="submit" style="background: #007acc; border: none; color: white; padding: 0.5rem 1rem; cursor: pointer;">Go</button>
+                </form>
+            </div>
+            
+            <div style="padding: 1rem; flex: 1; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid #444; color: #888;">
+                            <th style="padding: 0.5rem;">Name</th>
+                            <th style="padding: 0.5rem;">Size</th>
+                            <th style="padding: 0.5rem;">Modified</th>
+                            <th style="padding: 0.5rem;">Permissions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="padding: 0.5rem;">📄 index.html</td>
+                            <td style="padding: 0.5rem;">12 KB</td>
+                            <td style="padding: 0.5rem;">Oct 12 14:02</td>
+                            <td style="padding: 0.5rem;">rw-r--r--</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="padding: 0.5rem;">📄 app.js</td>
+                            <td style="padding: 0.5rem;">145 KB</td>
+                            <td style="padding: 0.5rem;">Oct 12 14:05</td>
+                            <td style="padding: 0.5rem;">rw-r--r--</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="padding: 0.5rem;">📁 css</td>
+                            <td style="padding: 0.5rem;">--</td>
+                            <td style="padding: 0.5rem;">Sep 01 09:12</td>
+                            <td style="padding: 0.5rem;">rwxr-xr-x</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                {% if score and score.attack_detected %}
+                    <div style="margin-top: 2rem; border: 1px solid #ff4444; background: rgba(255, 68, 68, 0.1); padding: 1rem;">
+                        <h4 style="color: #ff4444; margin-bottom: 0.5rem;">[ERROR] Security Violation Exception</h4>
+                        <p style="color: #ff9999;">Attempted access mapping resolved out-of-bounds.<br>Resolving block: <code>{{ request.form.get('dir_path') }}</code></p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/score_overlay.html' %}
+{% endblock %}

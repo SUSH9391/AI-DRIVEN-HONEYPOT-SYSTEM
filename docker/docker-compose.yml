@@ -1,9 +1,9 @@
-
 services:
-  api:
+  fastapi_backend:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+    # Optional: we can remove port 8000 from the host in production, but keeping it for dev is fine.
     ports:
       - "8000:8000"
     env_file:
@@ -12,15 +12,31 @@ services:
       DATABASE_HOST: postgres
     depends_on:
       - redis
-      
     volumes:
       - ../src:/app
-      - ../src/templates:/app/templates
-      - ../src/static:/app/static
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     restart: always
 
- 
+  flask_frontend:
+    build:
+      context: ../flask_frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    env_file:
+      - ../.env
+    environment:
+      - FLASK_SECRET_KEY=${FLASK_SECRET_KEY:-dev_secret_key}
+      - FASTAPI_INTERNAL_URL=http://fastapi_backend:8000
+      - FASTAPI_SERVICE_TOKEN=${FASTAPI_SERVICE_TOKEN:-dummy_token}
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - fastapi_backend
+      - redis
+    volumes:
+      - ../flask_frontend:/app
+    command: flask run --host=0.0.0.0 --port=5000
+    restart: always
 
   redis:
     image: redis:7-alpine
@@ -32,4 +48,3 @@ services:
 
 volumes:
   redis_data:
-  

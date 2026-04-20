@@ -1,8 +1,6 @@
 from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
 
-from app.routers import honeypot, admin, health
+from app.routers import honeypot, admin, health, sandbox, scoring, users
 from app.middleware import AuthMiddleware, FingerprintMiddleware, LoggingMiddleware
 from app.middleware.rate_limit import limiter
 
@@ -20,15 +18,7 @@ import os
 def create_app():
     app = FastAPI(title="AI Honeypot", version="1.0.0")
 
-    # ✅ BASE DIR FIX (IMPORTANT)
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    # ✅ Templates & Static (FIXED PATHS)
-    templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
-    app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
-
-    # Share templates across routers
-    app.state.templates = templates
+    # App is now JSON-only backend. (Jinja2 moved to Flask frontend)
 
     # DB create tables (dev only)
     @app.on_event("startup")
@@ -49,34 +39,11 @@ def create_app():
     app.include_router(honeypot.router)
     app.include_router(admin.router)
     app.include_router(health.router)
+    app.include_router(sandbox.router)
+    app.include_router(scoring.router)
+    app.include_router(users.router)
 
-    # ---------------------------
-    # 🌐 Frontend Routes (HTML)
-    # ---------------------------
-
-    @app.get("/")
-    async def root(request: Request):
-        return templates.TemplateResponse("login.html", {"request": request})
-
-    @app.get("/signup")
-    async def signup_page(request: Request):
-        return templates.TemplateResponse("signup.html", {"request": request})
-
-    @app.get("/product")
-    async def product_page(request: Request):
-        return templates.TemplateResponse("product.html", {"request": request})
-
-    @app.get("/checkout")
-    async def checkout_page(request: Request):
-        return templates.TemplateResponse("checkout.html", {"request": request})
-
-    @app.get("/admin_login")
-    async def admin_login_page(request: Request):
-        return templates.TemplateResponse("admin_login.html", {"request": request})
-
-    @app.get("/dashboard")
-    async def dashboard_page(request: Request):
-        return templates.TemplateResponse("dashboard.html", {"request": request})
+    # (All UI routes moved to Flask frontend)
 
     # Prometheus Monitoring
     Instrumentator().instrument(app).expose(app)

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: #f4f6f8; color: #333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 70vh; border-radius: 8px; overflow: hidden; display: flex;">
+    <div style="flex: 1; background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1000&q=80') center/cover; position: relative;">
+        <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6)); display: flex; flex-direction: column; justify-content: center; padding: 4rem;">
+            <h1 style="color: white; font-size: 3rem; margin-bottom: 1rem;">Apex Corp<br>Employee Portal</h1>
+            <p style="color: #cbd5e1; font-size: 1.2rem; max-width: 400px;">Internal access platform for authorized personnel. All activity is logged.</p>
+        </div>
+    </div>
+    
+    <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 4rem; background: white;">
+        <div style="width: 100%; max-width: 400px;">
+            <div style="margin-bottom: 3rem; text-align: center;">
+                <div style="width: 60px; height: 60px; background: #0f172a; border-radius: 12px; margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: white; font-size: 1.5rem; font-weight: bold;">A</span>
+                </div>
+                <h2 style="color: #0f172a; font-size: 1.8rem;">Single Sign-On</h2>
+            </div>
+            
+            <form action="{{ url_for('sandbox.attack') }}" method="POST">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Corporate Email</label>
+                    <input type="email" name="email" style="width: 100%; padding: 0.875rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem;" placeholder="employee@apexcorp.com" required>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Password</label>
+                    <input type="password" name="password" style="width: 100%; padding: 0.875rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem;" required>
+                </div>
+                
+                <button type="submit" style="width: 100%; background: #0f172a; color: white; padding: 1rem; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s;">Authenticate</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/score_overlay.html' %}
+{% endblock %}
