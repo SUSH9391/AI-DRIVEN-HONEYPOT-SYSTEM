@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for
 import asyncio
-from flask_frontend.services.fastapi_client import fastapi_client
+from flask_frontend.services import fastapi_client as fc_module
 
 environments_bp = Blueprint('environments', __name__, url_prefix='/environments')
 
@@ -12,7 +12,7 @@ def require_auth():
 @environments_bp.route('/')
 def index():
     user_id = session.get('user_id')
-    stats = asyncio.run(fastapi_client.get_user_stats(user_id))
+    stats = asyncio.run(fc_module.fastapi_client.get_user_stats(user_id))
     level = stats.get('level', 1)
     
     envs = [

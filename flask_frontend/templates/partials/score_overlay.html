@@ -4,22 +4,22 @@
         <!-- Close button to dismiss overlay -->
         <button onclick="document.getElementById('score-overlay').style.display='none'" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.5rem;">&times;</button>
         
-        {% if score.attack_detected %}
+        {% if attack_detected %}
             <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
             <h2 style="color: #34d399; margin-bottom: 1rem; font-size: 2rem;">Attack Detected!</h2>
             
             <div style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid var(--border-glass);">
                 <p style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
                     <span style="color: var(--text-muted)">Attack Type:</span> 
-                    <strong>{{ score.attack_type }}</strong>
+                    <strong>{{ score.get('attack_type', 'Unknown') }}</strong>
                 </p>
                 <p style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
                     <span style="color: var(--text-muted)">Confidence:</span> 
-                    <strong>{{ (score.confidence * 100)|round }}%</strong>
+                    <strong>{{ (score.get('confidence', 0) * 100)|round }}%</strong>
                 </p>
                 <p style="margin-bottom: 0; display: flex; justify-content: space-between;">
                     <span style="color: var(--text-muted)">XP Earned:</span> 
-                    <strong style="color: #fbbf24;">+{{ score.xp_earned }} XP</strong>
+                    <strong style="color: #fbbf24;">+{{ score.get('xp_earned', 0) }} XP</strong>
                 </p>
             </div>
 

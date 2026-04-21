@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for
 import asyncio
-from flask_frontend.services.fastapi_client import fastapi_client
+from flask_frontend.services import fastapi_client as fc_module
 
 dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 
@@ -12,7 +12,7 @@ def require_auth():
 @dashboard_bp.route('/')
 def index():
     user_id = session.get('user_id')
-    stats = asyncio.run(fastapi_client.get_user_stats(user_id))
+    stats = asyncio.run(fc_module.fastapi_client.get_user_stats(user_id))
     
     if 'error' in stats:
         stats = {"total_xp": 0, "level": 1, "badges": [], "attack_history": [], "leaderboard_rank": 0}

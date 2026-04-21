@@ -10,9 +10,12 @@ from flask_frontend.routes.environments import environments_bp
 from flask_frontend.routes.sandbox import sandbox_bp
 from flask_frontend.routes.landing import landing_bp
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__, template_folder='templates', static_folder='static')
     app.config.from_object(Config)
+
+    if test_config:
+        app.config.update(test_config)
 
     # Initialize Flask-Session
     Session(app)
