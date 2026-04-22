@@ -4,12 +4,13 @@ from app.detectors.ml_detector import MLDetector
 from app.generators.fake_data import FakeDataGenerator
 from app.services.logging_service import LoggingService
 from app.services.session_service import SessionService
+from core.config import settings
 import asyncio
 import json
 
 # Instantiate singletons internally to prevent model reloads per request
 rule_detector_inst = RuleDetector()
-ml_detector_inst = MLDetector()
+ml_detector_inst = MLDetector() if settings.USE_ML_DETECTOR else None
 fake_gen_inst = FakeDataGenerator()
 logging_svc_inst = LoggingService()
 session_svc_inst = SessionService()
@@ -50,8 +51,8 @@ class HoneypotService:
         fake_resp = self.fake_gen.generate(data)
         
         # Async ML if rule conf high
-        if rule_result.confidence > 0.6:
-            background_tasks.add_task(self.ml_detector.score_async, data)
+        if rule_result.confidence > 0.6 and self.ml_detector:
+            background_tasks.add_task(self.ml_detector.score, data)
         
         # Background log + session update
         background_tasks.add_task(

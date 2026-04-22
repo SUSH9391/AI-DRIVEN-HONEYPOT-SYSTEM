@@ -1,33 +1,37 @@
-from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
-from core.config import settings
-from typing import Dict, Any
-import torch
+from transformers import pipeline
+import logging
+
+logger = logging.getLogger(__name__)
 
 class MLDetector:
+    MODEL_NAME = "martin-ha/toxic-comment-model"
+    
     def __init__(self):
-        model_name = settings.HF_MODEL_NAME
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForSequenceClassification.from_pretrained(model_name)
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.model.to(self.device)
-        self.pipeline = pipeline(
+        logger.info(f"Loading ML model: {self.MODEL_NAME}")
+        self.classifier = pipeline(
             "text-classification",
-            model=self.model,
-            tokenizer=self.tokenizer,
-            device=self.device,
-            return_all_scores=True
+            model=self.MODEL_NAME,
+            device=-1,          # force CPU, never GPU
+            truncation=True,
+            max_length=128,     # short inputs only, keeps it fast
         )
+        logger.info("ML model loaded successfully")
 
-    async def score_async(self, data: Dict[str, Any]) -> float:
+    def score(self, payload: dict) -> float:
         """
-        Async ML scoring via HF transformers (ARQ/background).
-        Returns confidence 0.0-1.0 for malicious.
+        Takes attack payload dict, returns confidence float 0.0-1.0.
+        Combines all form field values into one string for classification.
         """
-        text = data.get("query", "") or data.get("body", {}).get("username", "")
-        if not text:
+        try:
+            text = " ".join(str(v) for v in payload.values())[:512]
+            if not text.strip():
+                return 0.0
+            result = self.classifier(text)[0]
+            # model returns label TOXIC/NON_TOXIC with score
+            if result['label'] == 'TOXIC':
+                return round(result['score'], 4)
+            else:
+                return round(1 - result['score'], 4)
+        except Exception as e:
+            logger.error(f"ML scoring failed: {e}")
             return 0.0
-        
-        results = self.pipeline(text)
-        malicious_score = max([score["score"] for score in results[0] if "malicious" in score["label"].lower() or "attack" in score["label"].lower()], default=0.0)
-        return min(malicious_score, 1.0)
-

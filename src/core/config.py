@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     # ML/HF
     HF_MODEL_NAME: str = "distilbert-base-uncased-finetuned-sst-2-english"  # Change to threat classifier
     HF_API_KEY: Optional[str] = None
+    USE_ML_DETECTOR: bool = True
     
     # Dual-Service Architecture
     FASTAPI_SERVICE_TOKEN: str = "dummy_token"

@@ -1,31 +1,25 @@
 FROM python:3.12-slim
-
-# Install system dependencies (prevents common build errors)
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install uv (modern package manager)
+WORKDIR /app
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 RUN pip install uv
 
-# Set working directory
-WORKDIR /app
+# Install CPU-only torch FIRST (~200MB)
+RUN pip install torch --index-url https://download.pytorch.org/whl/cpu
 
-# Copy dependency file first (for caching)
 COPY pyproject.toml .
+COPY uv.lock* .
 
-# Install dependencies
-RUN uv pip install --system "torch==2.3.1" --index-url https://download.pytorch.org/whl/cpu --no-cache-dir
-RUN uv pip install --system PyJWT
-RUN uv pip install --system "redis[asyncio]==5.0.8"
-RUN uv pip install --system .
+RUN uv sync --frozen --no-dev --no-install-package torch
 
-# Copy application code
-COPY src/ .
+COPY . .
 
-# Expose port
+# Pre-cache ML model (~250MB baked in)
+RUN uv run python -c "\
+    from transformers import pipeline; \
+    pipeline('text-classification', \
+             model='martin-ha/toxic-comment-model', \
+             device=-1)"
+
 EXPOSE 8000
-
-# Run application
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
