@@ -1,41 +1,149 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div style="background: #f0f2f5; color: #050505; font-family: Helvetica, Arial, sans-serif; min-height: 70vh; border-radius: 8px; overflow: hidden;">
-    <div style="background: white; border-bottom: 1px solid #ddd; padding: 0.5rem 1rem; display: flex; align-items: center; position: sticky; top: 0; z-index: 10;">
-        <div style="width: 40px; height: 40px; background: #1877f2; border-radius: 50%; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.5rem; margin-right: 1rem;">n</div>
-        <input type="text" placeholder="Search Nexus..." style="background: #f0f2f5; border: none; padding: 0.5rem 1rem; border-radius: 20px; width: 250px; outline: none;">
-    </div>
-    
-    <div style="max-width: 600px; margin: 2rem auto; padding-bottom: 2rem;">
-        <!-- Demo Post -->
-        <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
-            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                <div style="width: 40px; height: 40px; background: #10b981; border-radius: 50%; margin-right: 0.75rem;"></div>
-                <div>
-                    <strong style="display: block;">Jane Doe</strong>
-                    <span style="color: #65676b; font-size: 0.8rem;">2 hours ago</span>
-                </div>
-            </div>
-            <p style="margin-bottom: 1rem;">Just finished learning about web vulnerabilities! It's crazy how easy some platforms are to exploit if developers aren't careful.</p>
-            
-            {% if score and score.attack_detected %}
-                <div style="background: #fff3cd; color: #856404; padding: 1rem; border-left: 4px solid #ffeeba; margin-top: 1rem; border-radius: 4px; overflow-wrap: break-word;">
-                    <em>Injected Content Blocked:</em><br>
-                    <code style="display: inline-block; margin-top: 0.5rem; word-break: break-all;">{{ request.form.get('comment') }}</code>
-                </div>
-            {% endif %}
-
-            <div style="border-top: 1px solid #ebedf0; padding-top: 1rem; margin-top: 1rem;">
-                <form action="{{ url_for('sandbox.attack') }}" method="POST" style="display: flex; gap: 0.5rem;">
-                    <div style="width: 32px; height: 32px; background: #cbd5e1; border-radius: 50%; flex-shrink: 0;"></div>
-                    <input type="text" name="comment" placeholder="Write a comment..." style="flex: 1; background: #f0f2f5; border: none; padding: 0.5rem 1rem; border-radius: 20px; outline: none;" required>
-                    <button type="submit" style="background: none; border: none; color: #1877f2; font-weight: bold; cursor: pointer; padding: 0 0.5rem;">Post</button>
-                </form>
-            </div>
+{% block main %}
+<div class="sandbox-immersion" style="font-family: 'Inter', sans-serif; background-color: #f0f2f5; margin: -2rem; min-height: 100vh;">
+    <!-- Fake Navbar -->
+    <header style="background-color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 10;">
+        <div style="font-size: 1.5rem; font-weight: 800; color: #1877f2; display: flex; align-items: center; gap: 0.5rem;">
+            <div style="background: #1877f2; color: white; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">n</div>
+            Nexus
         </div>
+        <div style="display: flex; gap: 1rem;">
+            <input type="text" placeholder="Search Nexus" style="padding: 0.5rem 1rem; border-radius: 20px; border: none; background: #f0f2f5; outline: none; width: 250px;">
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <div style="width: 40px; height: 40px; background: #e4e6eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">🔔</div>
+            <div style="width: 40px; height: 40px; background: #1877f2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer;">AJ</div>
+        </div>
+    </header>
+
+    <div style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr 280px; gap: 1.5rem; padding: 2rem 1rem;">
+        
+        <!-- Left Sidebar -->
+        <aside>
+            <div style="background: white; border-radius: 8px; padding: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="width: 48px; height: 48px; background: #1877f2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">AJ</div>
+                    <div>
+                        <div style="font-weight: 600;">Alex Johnson</div>
+                        <div style="color: #65676b; font-size: 0.85rem;">142 friends</div>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; color: #050505; font-weight: 500;">
+                    <div style="padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">👩‍👦‍👦 Friends</div>
+                    <div style="padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">🔖 Saved</div>
+                    <div style="padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">🕒 Memories</div>
+                    <div style="padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">🚩 Pages</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Feed -->
+        <main style="display: flex; flex-direction: column; gap: 1rem;">
+            
+            <!-- Create Post -->
+            <div style="background: white; border-radius: 8px; padding: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="width: 40px; height: 40px; background: #1877f2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">AJ</div>
+                    <input type="text" placeholder="What's on your mind, Alex?" style="flex: 1; padding: 0.5rem 1rem; border-radius: 20px; border: none; background: #f0f2f5; outline: none; cursor: pointer;">
+                </div>
+                <hr style="border: none; border-top: 1px solid #e4e6eb; margin-bottom: 0.5rem;">
+                <div style="display: flex; justify-content: space-around;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #65676b; font-weight: 500; cursor: pointer; padding: 0.5rem; border-radius: 6px;">📹 Live Video</div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #65676b; font-weight: 500; cursor: pointer; padding: 0.5rem; border-radius: 6px;">🖼️ Photo/Video</div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #65676b; font-weight: 500; cursor: pointer; padding: 0.5rem; border-radius: 6px;">😀 Feeling/Activity</div>
+                </div>
+            </div>
+
+            <!-- Fake Post 1 -->
+            <div style="background: white; border-radius: 8px; padding: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <div style="width: 40px; height: 40px; background: #e8db5a; color: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">SM</div>
+                    <div>
+                        <div style="font-weight: 600;">Sarah Miller</div>
+                        <div style="color: #65676b; font-size: 0.8rem;">2 hrs • 🌎</div>
+                    </div>
+                </div>
+                <p style="margin-bottom: 1rem;">Just deployed my first full-stack app! Really proud of how it turned out. 🚀💻</p>
+                <div style="color: #65676b; font-size: 0.9rem; display: flex; justify-content: space-between; border-bottom: 1px solid #e4e6eb; padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                    <span>👍 24</span>
+                    <span>5 Comments</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; color: #65676b; font-weight: 500;">
+                    <div style="padding: 0.5rem; cursor: pointer;">👍 Like</div>
+                    <div style="padding: 0.5rem; cursor: pointer;">💬 Comment</div>
+                    <div style="padding: 0.5rem; cursor: pointer;">🔁 Share</div>
+                </div>
+            </div>
+
+            <!-- The Vulnerable Post (XSS Attack Surface) -->
+            <div style="background: white; border-radius: 8px; padding: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <div style="width: 40px; height: 40px; background: #ef4444; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">DT</div>
+                    <div>
+                        <div style="font-weight: 600;">David Taylor</div>
+                        <div style="color: #65676b; font-size: 0.8rem;">5 hrs • 👥</div>
+                    </div>
+                </div>
+                <p style="margin-bottom: 1rem;">Who else is excited for the new framework release tomorrow? I've been waiting for months!</p>
+                <div style="color: #65676b; font-size: 0.9rem; display: flex; justify-content: space-between; border-bottom: 1px solid #e4e6eb; padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                    <span>❤️👍 112</span>
+                    <span>18 Comments</span>
+                </div>
+                
+                <!-- Comment section (ATTACK SURFACE) -->
+                <div>
+                    <div style="display: flex; gap: 1rem; align-items: flex-start; margin-top: 1rem;">
+                        <div style="width: 32px; height: 32px; background: #1877f2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 0.8rem;">AJ</div>
+                        
+                        <form method="POST" action="/sandbox/attack" style="flex: 1; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <input type="hidden" name="attack_type" value="xss">
+                            <textarea name="comment" placeholder="Write a comment..." style="width: 100%; padding: 0.75rem; border-radius: 16px; border: 1px solid #ccd0d5; background: #f0f2f5; outline: none; font-family: inherit; resize: vertical; min-height: 40px; box-sizing: border-box;"></textarea>
+                            <div style="display: flex; justify-content: flex-end;">
+                                <button type="submit" style="background: #1877f2; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer;">Post Comment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside>
+            <div style="position: sticky; top: 80px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; color: #65676b; font-weight: 600;">
+                    <span>People You May Know</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Suggested 1 -->
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 40px; height: 40px; background: #10b981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">RC</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; font-size: 0.9rem;">Rachel Chen</div>
+                            <div style="color: #65676b; font-size: 0.8rem;">12 mutual friends</div>
+                        </div>
+                    </div>
+                    <!-- Suggested 2 -->
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 40px; height: 40px; background: #8b5cf6; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">MP</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; font-size: 0.9rem;">Marcus Price</div>
+                            <div style="color: #65676b; font-size: 0.8rem;">3 mutual friends</div>
+                        </div>
+                    </div>
+                    <!-- Suggested 3 -->
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 40px; height: 40px; background: #f59e0b; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">JL</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; font-size: 0.9rem;">Jessica Lin</div>
+                            <div style="color: #65676b; font-size: 0.8rem;">New to Nexus</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
     </div>
 </div>
-
-{% include 'partials/score_overlay.html' %}
 {% endblock %}

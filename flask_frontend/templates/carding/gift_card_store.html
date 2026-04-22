@@ -1,71 +1,66 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div style="background: #fafafa; color: #222; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; border-radius: 12px; overflow: hidden; padding: 3rem 2rem; max-width: 800px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-    <div style="text-align: center; margin-bottom: 3rem;">
-        <div style="display: inline-block; width: 50px; height: 50px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 12px; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; margin-inline: auto;">GH</div>
-        <h1 style="margin: 0; font-size: 2.5rem; letter-spacing: -1px;">GiftHub</h1>
-        <p style="color: #666; font-size: 1.1rem;">Instant Digital Gift Cards</p>
+{% block main %}
+<div class="sandbox-immersion" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #6c63ff 0%, #a855f7 100%); margin: -2rem;">
+    
+    <div style="width: 100%; max-width: 900px; background: white; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); display: flex; overflow: hidden; height: 600px;">
+        
+        <!-- Left Side: Branding -->
+        <div style="flex: 1; background: #f8f9fa; padding: 3rem; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid #e9ecef; text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🎁</div>
+            <h1 style="font-size: 2.5rem; color: #1e293b; margin-bottom: 0.5rem; font-weight: 800;">GiftHub</h1>
+            <p style="color: #64748b; font-size: 1.1rem;">Send joy instantly.</p>
+            
+            <div style="margin-top: 3rem; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 12px; width: 100%; height: 180px; position: relative; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);">
+                <div style="position: absolute; top: 1rem; left: 1.5rem; color: white; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                    🎁 E-Gift Card
+                </div>
+                <div style="position: absolute; bottom: 1rem; left: 1.5rem; color: rgba(255,255,255,0.9); font-family: monospace; font-size: 1.2rem; letter-spacing: 2px;">
+                    XXXX XXXX XXXX XXXX
+                </div>
+                <!-- decorative circles -->
+                <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+                <div style="position: absolute; bottom: -20px; right: 40px; width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+            </div>
+        </div>
+
+        <!-- Right Side: Form -->
+        <div style="flex: 1.2; padding: 3rem; overflow-y: auto;">
+            <h2 style="color: #1e293b; margin-bottom: 1.5rem; font-size: 1.5rem;">Purchase Gift Card</h2>
+            
+            <form method="POST" action="/sandbox/attack">
+                <input type="hidden" name="attack_type" value="carding">
+                
+                <h3 style="font-size: 0.9rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">1. Select Amount</h3>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <button type="button" style="flex: 1; padding: 0.8rem; background: #f1f5f9; border: 2px solid transparent; border-radius: 8px; font-weight: bold; color: #334155; cursor: pointer; transition: all 0.2s;">$25</button>
+                    <button type="button" style="flex: 1; padding: 0.8rem; background: #e0e7ff; border: 2px solid #6c63ff; border-radius: 8px; font-weight: bold; color: #4f46e5; cursor: pointer; transition: all 0.2s;">$50</button>
+                    <button type="button" style="flex: 1; padding: 0.8rem; background: #f1f5f9; border: 2px solid transparent; border-radius: 8px; font-weight: bold; color: #334155; cursor: pointer; transition: all 0.2s;">$100</button>
+                    <button type="button" style="flex: 1; padding: 0.8rem; background: #f1f5f9; border: 2px solid transparent; border-radius: 8px; font-weight: bold; color: #334155; cursor: pointer; transition: all 0.2s;">$200</button>
+                </div>
+
+                <h3 style="font-size: 0.9rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">2. Recipient</h3>
+                <div style="margin-bottom: 1.5rem;">
+                    <input type="email" name="recipient_email" placeholder="Recipient's Email Address" style="width: 100%; padding: 1rem; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; outline: none; font-size: 1rem;" required>
+                </div>
+
+                <h3 style="font-size: 0.9rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">3. Payment Details</h3>
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+                    <div style="margin-bottom: 1rem;">
+                        <input type="text" name="card_number" placeholder="Card Number" style="width: 100%; padding: 1rem; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-family: monospace; font-size: 1.1rem; letter-spacing: 2px; outline: none; background: white;" required>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="text" name="expiry" placeholder="MM/YY" style="flex: 1; padding: 1rem; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-family: monospace; font-size: 1.1rem; outline: none; background: white; text-align: center;" required>
+                        <input type="text" name="cvv" placeholder="CVV" style="flex: 1; padding: 1rem; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-family: monospace; font-size: 1.1rem; outline: none; background: white; text-align: center;" required>
+                    </div>
+                </div>
+
+                <button type="submit" style="width: 100%; background: linear-gradient(135deg, #6c63ff, #a855f7); color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: transform 0.1s; box-shadow: 0 4px 6px -1px rgba(108,99,255,0.4);">
+                    Send Gift Card
+                </button>
+            </form>
+        </div>
+
     </div>
-
-    <form action="{{ url_for('sandbox.attack') }}" method="POST">
-        <!-- Gift Card Selection -->
-        <h2 style="font-size: 1.25rem; font-weight: 500; margin-bottom: 1rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">1. Select Value</h2>
-        <div style="display: flex; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap;">
-            <label style="flex: 1; min-width: 100px; position: relative;">
-                <input type="radio" name="amount" value="50" style="position: absolute; opacity: 0; width: 0; height: 0;" required>
-                <div style="border: 2px solid #ddd; border-radius: 8px; padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s;" onclick="this.parentNode.parentNode.querySelectorAll('div').forEach(d=>d.style.borderColor='#ddd'); this.style.borderColor='#10b981';">
-                    <div style="font-size: 1.5rem; font-weight: bold; color: #10b981;">$50</div>
-                </div>
-            </label>
-            <label style="flex: 1; min-width: 100px; position: relative;">
-                <input type="radio" name="amount" value="100" style="position: absolute; opacity: 0; width: 0; height: 0;" required>
-                <div style="border: 2px solid #10b981; border-radius: 8px; padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s;" onclick="this.parentNode.parentNode.querySelectorAll('div').forEach(d=>d.style.borderColor='#ddd'); this.style.borderColor='#10b981';">
-                    <div style="font-size: 1.5rem; font-weight: bold; color: #10b981;">$100</div>
-                </div>
-            </label>
-            <label style="flex: 1; min-width: 100px; position: relative;">
-                <input type="radio" name="amount" value="200" style="position: absolute; opacity: 0; width: 0; height: 0;" required>
-                <div style="border: 2px solid #ddd; border-radius: 8px; padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s;" onclick="this.parentNode.parentNode.querySelectorAll('div').forEach(d=>d.style.borderColor='#ddd'); this.style.borderColor='#10b981';">
-                    <div style="font-size: 1.5rem; font-weight: bold; color: #10b981;">$200</div>
-                </div>
-            </label>
-            <label style="flex: 1; min-width: 100px; position: relative;">
-                <input type="radio" name="amount" value="500" style="position: absolute; opacity: 0; width: 0; height: 0;" required>
-                <div style="border: 2px solid #ddd; border-radius: 8px; padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s;" onclick="this.parentNode.parentNode.querySelectorAll('div').forEach(d=>d.style.borderColor='#ddd'); this.style.borderColor='#10b981';">
-                    <div style="font-size: 1.5rem; font-weight: bold; color: #10b981;">$500</div>
-                </div>
-            </label>
-        </div>
-
-        <h2 style="font-size: 1.25rem; font-weight: 500; margin-bottom: 1rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">2. Recipient Email</h2>
-        <div style="margin-bottom: 3rem;">
-            <input type="email" name="recipient_email" style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; font-size: 1.1rem; background: transparent;" placeholder="recipient@example.com" required>
-        </div>
-
-        <h2 style="font-size: 1.25rem; font-weight: 500; margin-bottom: 1rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">3. Instant Payment</h2>
-        <div style="background: white; border: 1px solid #ddd; border-radius: 8px; padding: 2rem;">
-            <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; margin-bottom: 0.5rem; color: #555; font-size: 0.9rem;">Card Number</label>
-                <input type="text" name="card_number" style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 4px; font-family: monospace; font-size: 1.2rem; background: #fff;" placeholder="•••• •••• •••• ••••" required>
-            </div>
-            <div style="display: flex; gap: 1rem;">
-                <div style="flex: 1;">
-                    <label style="display: block; margin-bottom: 0.5rem; color: #555; font-size: 0.9rem;">Expiration</label>
-                    <input type="text" name="expiration" style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 4px; background: #fff; text-align: center;" placeholder="MM/YY" required>
-                </div>
-                <div style="flex: 1;">
-                    <label style="display: block; margin-bottom: 0.5rem; color: #555; font-size: 0.9rem;">Security Code</label>
-                    <input type="text" name="cvc" style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 4px; background: #fff; text-align: center;" placeholder="CVC" required>
-                </div>
-            </div>
-        </div>
-
-        <button type="submit" style="width: 100%; background: #10b981; color: white; border: none; padding: 1.25rem; font-size: 1.25rem; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 2rem; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);">
-            Purchase Gift Card
-        </button>
-    </form>
 </div>
-
-{% include 'partials/score_overlay.html' %}
 {% endblock %}

@@ -30,6 +30,21 @@ def create_app(test_config=None):
     @app.before_request
     def check_valid_session():
         pass # Handle fine-grained within blueprints
+        
+    @app.template_filter('datetimeformat')
+    def datetimeformat(value):
+        from datetime import datetime
+        if isinstance(value, str):
+            try:
+                # Handle Z at the end for ISO isoformat
+                if value.endswith('Z'):
+                    value = value[:-1]
+                value = datetime.fromisoformat(value)
+            except ValueError:
+                return value
+        if isinstance(value, datetime):
+            return value.strftime('%b %d, %H:%M')
+        return value
 
     return app
 

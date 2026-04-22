@@ -1,61 +1,218 @@
-{% if score %}
-<div id="score-overlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 9999;">
-    <div class="glass-card" style="max-width: 500px; text-align: center; position: relative;">
-        <!-- Close button to dismiss overlay -->
-        <button onclick="document.getElementById('score-overlay').style.display='none'" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.5rem;">&times;</button>
-        
+<!-- templates/partials/score_overlay.html -->
+<div id="score-overlay" class="score-overlay-backdrop">
+    <div class="score-card">
         {% if attack_detected %}
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
-            <h2 style="color: #34d399; margin-bottom: 1rem; font-size: 2rem;">Attack Detected!</h2>
+            <!-- Attack Detected State -->
+            <div class="icon-container success animate-pop">
+                🛡️
+            </div>
+            <h1 class="title success-text">Attack Detected!</h1>
             
-            <div style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid var(--border-glass);">
-                <p style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
-                    <span style="color: var(--text-muted)">Attack Type:</span> 
-                    <strong>{{ score.get('attack_type', 'Unknown') }}</strong>
-                </p>
-                <p style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
-                    <span style="color: var(--text-muted)">Confidence:</span> 
-                    <strong>{{ (score.get('confidence', 0) * 100)|round }}%</strong>
-                </p>
-                <p style="margin-bottom: 0; display: flex; justify-content: space-between;">
-                    <span style="color: var(--text-muted)">XP Earned:</span> 
-                    <strong style="color: #fbbf24;">+{{ score.get('xp_earned', 0) }} XP</strong>
-                </p>
+            <div class="badge-type">{{ attack_type | upper }}</div>
+            
+            <div class="confidence-container">
+                <div class="confidence-label">
+                    <span>Confidence Score</span>
+                    <span>{{ (confidence * 100) | round | int }}%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill progress-success" style="width: {{ confidence * 100 }}%"></div>
+                </div>
             </div>
 
-            {% if score.hint %}
-                <div class="alert alert-success" style="text-align: left; font-size: 0.9rem;">
-                    <strong>Hint:</strong> {{ score.hint }}
-                </div>
+            <div class="xp-earned">
+                <span class="xp-plus">+</span><span>{{ xp_earned }}</span> <span class="xp-text">XP Earned</span>
+            </div>
+
+            {% if hint %}
+            <div class="hint-box">
+                <div class="hint-icon">💡</div>
+                <div class="hint-text">{{ hint }}</div>
+            </div>
             {% endif %}
 
-            {% if score.level_up %}
-                <div style="margin-top: 1.5rem; animation: pulse 2s infinite;">
-                    <h3 style="color: #8b5cf6;">🚀 Level Up! You reached Level {{ score.level }}!</h3>
-                </div>
+            <!-- Level Up Banner -->
+            {% if level_up %}
+            <div class="level-up-banner">
+                <div style="font-size: 2rem;">⚡</div>
+                <div style="font-size: 1.5rem; font-weight: 700;">LEVEL UP!</div>
+                <div>You reached Level {{ new_level }}</div>
+            </div>
             {% endif %}
-            
-            {% if score.badge_unlocked %}
-                <div style="margin-top: 1rem; border-top: 1px solid var(--border-glass); padding-top: 1rem;">
-                    <p style="color: #fbbf24; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                        <span style="font-size: 1.5rem;">🏅</span> Unlocked Badge: <strong>{{ score.badge_unlocked }}</strong>
-                    </p>
-                </div>
+
+            {% if badge_unlocked %}
+            <div class="badge-unlocked-banner">
+                <div style="font-size: 1.5rem;">🏅</div>
+                <div style="font-weight: 600;">Badge Unlocked: {{ badge_unlocked }}</div>
+            </div>
             {% endif %}
+
+            <button class="action-btn btn-primary" onclick="closeOverlay()">Continue Hacking</button>
+
         {% else %}
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
-            <h2 style="color: #94a3b8; margin-bottom: 1rem; font-size: 2rem;">No Attack Detected</h2>
-            <p style="color: var(--text-muted); margin-bottom: 2rem;">The honeypot didn't characterize this request as malicious.</p>
+            <!-- No Attack Detected State -->
+            <div class="icon-container neutral animate-pop">
+                👁️
+            </div>
+            <h1 class="title neutral-text">No Attack Detected</h1>
+            
+            <p class="neutral-description">The input was processed normally. No malicious patterns were identified.</p>
+
+            <div class="hint-box neutral-bg">
+                <div class="hint-icon">💡</div>
+                <div class="hint-text">Try injecting special characters, scripts, or path manipulation payloads dependent on the vulnerable context.</div>
+            </div>
+
+            <button class="action-btn btn-secondary" onclick="closeOverlay()">Try Again</button>
         {% endif %}
-        
-        <button onclick="document.getElementById('score-overlay').style.display='none'" class="btn-primary" style="margin-top: 1rem;">Continue Hacking</button>
     </div>
 </div>
+
 <style>
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+.score-overlay-backdrop {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease-out forwards;
 }
+
+.score-card {
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: white;
+    font-family: inherit;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.icon-container {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center; justify-content: center;
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+.icon-container.success { background: linear-gradient(135deg, #10b981, #059669); }
+.icon-container.neutral { background: linear-gradient(135deg, #64748b, #475569); }
+
+.title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0; margin-bottom: 0.5rem;
+}
+.success-text { color: #10b981; }
+.neutral-text { color: #f8fafc; }
+
+.badge-type {
+    background: rgba(255,255,255,0.1);
+    color: #e2e8f0;
+    padding: 0.3rem 1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+}
+
+.confidence-container { width: 100%; margin-bottom: 2rem; }
+.confidence-label {
+    display: flex; justify-content: space-between;
+    font-size: 0.85rem; color: #cbd5e1; font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+.progress-bar-bg {
+    width: 100%; height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px; overflow: hidden;
+}
+.progress-bar-fill { height: 100%; border-radius: 999px; transition: width 1s ease-out; }
+.progress-success { background: linear-gradient(90deg, #34d399, #10b981); }
+
+.xp-earned {
+    font-size: 3.5rem; font-weight: 800;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem; line-height: 1;
+    display: flex; align-items: baseline; justify-content: center; gap: 0.2rem;
+}
+.xp-plus { font-size: 2.5rem; }
+.xp-text {
+    font-size: 1rem; font-weight: 600; color: #94a3b8;
+    -webkit-text-fill-color: #94a3b8; background: none; margin-left: 0.5rem; letter-spacing: 1px;
+}
+
+.hint-box {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex; gap: 0.75rem; align-items: flex-start;
+    text-align: left; margin-bottom: 2rem; width: 100%; box-sizing: border-box;
+}
+.hint-box.neutral-bg { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+.hint-icon { font-size: 1.25rem; }
+.hint-text { font-size: 0.9rem; color: #e2e8f0; line-height: 1.4; }
+.neutral-description { color: #94a3b8; font-size: 1rem; margin-bottom: 2rem; }
+
+.level-up-banner {
+    animation: pulse 0.5s ease-in-out 3;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;
+    color: white; width: 100%; box-sizing: border-box; box-shadow: 0 10px 25px rgba(239,68,68,0.3);
+}
+
+.badge-unlocked-banner {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    width: 100%; box-sizing: border-box; color: #fcd34d;
+}
+
+.action-btn {
+    width: 100%; padding: 1rem; border-radius: 12px; border: none; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.1s, box-shadow 0.2s;
+}
+.action-btn:hover { transform: translateY(-2px); }
+.btn-primary { background: white; color: #0f172a; box-shadow: 0 4px 15px rgba(255,255,255,0.2); }
+.btn-primary:active { background: #f1f5f9; }
+.btn-secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+.btn-secondary:hover { background: rgba(255,255,255,0.15); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+.animate-pop { animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 </style>
-{% endif %}
+
+<script>
+function closeOverlay() {
+    // Check if there is a next_url to redirect to
+    {% if next_url %}
+        window.location.href = "{{ next_url }}";
+    {% else %}
+        // Default to going back or to dashboard
+        if (document.referrer && document.referrer.includes(window.location.host)) {
+            window.location.href = document.referrer;
+        } else {
+            window.location.href = "/dashboard";
+        }
+    {% endif %}
+}
+</script>

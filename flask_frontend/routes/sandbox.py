@@ -69,6 +69,11 @@ def attack():
         )
     )
     
+    if result.get('attack_detected'):
+        session['total_xp'] = result.get('total_xp', session.get('total_xp', 0))
+        session['level'] = result.get('level', session.get('level', 1))
+        session.modified = True
+
     if result.get('level_up'):
         flash(f"Level Up! You reached Level {result.get('level')}!", 'level_up')
     

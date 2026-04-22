@@ -1,56 +1,128 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div style="background: #222; color: #ddd; font-family: 'Roboto', sans-serif; min-height: 70vh; border-radius: 8px; overflow: hidden; padding: 2rem;">
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h1 style="color: #fff; margin-bottom: 0.5rem; padding-bottom: 1rem; border-bottom: 1px solid #444;">DevTalk Community Forums</h1>
-        <div style="padding: 1rem 0; color: #bbb; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
-            <span>Home</span> &raquo; <span>General Discussion</span> &raquo; <span style="color: #fff;">Help parsing HTML inputs</span>
+{% block main %}
+<div class="sandbox-immersion" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #0d1117; color: #c9d1d9; margin: -2rem; min-height: 100vh; display: flex; flex-direction: column;">
+    <!-- Fake Header -->
+    <header style="background-color: #161b22; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #30363d;">
+        <div style="font-size: 1.5rem; font-weight: bold; color: #c9d1d9; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="color: #58a6ff;">&lt;/&gt;</span> DevTalk
         </div>
-        
-        <!-- Post 1 -->
-        <div style="background: #2a2a2a; border-left: 3px solid #ff4444; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-            <div style="padding: 0.5rem 1rem; background: #333; display: flex; justify-content: space-between; font-size: 0.85rem;">
-                <span style="font-weight: bold; color: #ff9999;">OpCoder</span>
-                <span>Posted yesterday, 14:22</span>
-            </div>
-            <div style="padding: 1.5rem; display: flex; gap: 1.5rem;">
-                <div style="width: 80px; text-align: center;">
-                    <div style="width: 60px; height: 60px; background: #555; border-radius: 4px; margin: 0 auto 0.5rem auto;"></div>
-                    <div style="font-size: 0.75rem; color: #888;">Posts: 124</div>
-                </div>
-                <div style="flex: 1; line-height: 1.6;">
-                    Hey all, I'm building a simple blog and I'm allowing users to embed standard HTML in their posts. How do I make sure they don't run scripts? Is regex replacing <script> enough?
-                </div>
-            </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <input type="text" placeholder="Search questions..." style="padding: 0.4rem 1rem; border-radius: 6px; border: 1px solid #30363d; background: #0d1117; color: #c9d1d9; outline: none; width: 300px;">
+            <div style="background: #238636; color: white; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: 500;">Ask Question</div>
         </div>
+    </header>
 
-        {% if score and score.attack_detected %}
-            <div style="background: #2a2a2a; border-left: 3px solid #44ff44; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-                <div style="padding: 0.5rem 1rem; background: #333; display: flex; justify-content: space-between; font-size: 0.85rem;">
-                    <span style="font-weight: bold; color: #99ff99;">You (Simulated)</span>
-                    <span>Just now</span>
+    <div style="max-width: 1200px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: 1fr 300px; gap: 2rem; padding: 2rem 1rem; flex: 1;">
+        
+        <!-- Main Forum Area -->
+        <main>
+            <div style="border-bottom: 1px solid #30363d; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <h1 style="font-size: 1.75rem; font-weight: 500; color: #c9d1d9; margin-bottom: 0.5rem;">Best practices for input validation in web apps</h1>
+                <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: #8b949e;">
+                    <span>Asked <span style="color: #c9d1d9;">yesterday</span></span>
+                    <span>Viewed <span style="color: #c9d1d9;">14k times</span></span>
                 </div>
-                <div style="padding: 1.5rem; display: flex; gap: 1.5rem;">
-                    <div style="flex: 1; color: #ffeb3b;">
-                        <em>XSS Payload executed in browser context:</em><br>
-                        <code>{{ request.form.get('reply') }}</code>
+            </div>
+
+            <!-- OP Post -->
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: #8b949e;">
+                    <div style="cursor: pointer; font-size: 1.5rem;">▲</div>
+                    <div style="font-size: 1.25rem; font-weight: bold; color: #c9d1d9;">245</div>
+                    <div style="cursor: pointer; font-size: 1.5rem;">▼</div>
+                </div>
+                <div style="flex: 1;">
+                    <p style="margin-bottom: 1rem; line-height: 1.6;">I'm building a new internal tool and want to make sure I'm following modern best practices for sanitizing input. Should I validate on the client side, the server side, or both? Are there any specific libraries recommended for JavaScript environments?</p>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <span style="background: #1f2428; color: #58a6ff; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; border: 1px solid #30363d;">security</span>
+                        <span style="background: #1f2428; color: #58a6ff; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; border: 1px solid #30363d;">javascript</span>
+                        <span style="background: #1f2428; color: #58a6ff; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; border: 1px solid #30363d;">web-development</span>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <div style="background: #161b22; padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; display: flex; gap: 0.5rem; align-items: center;">
+                            <div style="width: 32px; height: 32px; background: #8957e5; color: white; display: flex; align-items: center; justify-content: center; border-radius: 4px;">JS</div>
+                            <div>
+                                <div style="color: #58a6ff; font-weight: 500;">jscript_dev</div>
+                                <div style="color: #8b949e;">1,432 reputation</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        {% endif %}
 
-        <div style="background: #2a2a2a; padding: 2rem; margin-top: 2rem;">
-            <h3 style="color: #fff; margin-bottom: 1rem;">Post a Reply</h3>
-            <form action="{{ url_for('sandbox.attack') }}" method="POST">
-                <textarea name="reply" rows="6" style="width: 100%; background: #111; border: 1px solid #444; color: #eee; padding: 1rem; margin-bottom: 1rem; font-family: monospace; border-radius: 4px;" required placeholder="Type your reply here... HTML is allowed!"></textarea>
-                <div style="display: flex; justify-content: flex-end;">
-                    <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 0.75rem 2rem; border-radius: 4px; font-weight: bold; cursor: pointer;">Submit Reply</button>
+            <!-- Answers Header -->
+            <div style="border-bottom: 1px solid #30363d; padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 500;">4 Answers</h2>
+            </div>
+
+            <!-- Fake Answer 1 -->
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid #30363d; padding-bottom: 2rem;">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: #8b949e;">
+                    <div style="cursor: pointer; font-size: 1.5rem;">▲</div>
+                    <div style="font-size: 1.25rem; font-weight: bold; color: #238636;">412</div>
+                    <div style="cursor: pointer; font-size: 1.5rem;">▼</div>
+                    <div style="color: #238636; font-size: 1.5rem; margin-top: 0.5rem;">✓</div>
                 </div>
-            </form>
-        </div>
+                <div style="flex: 1;">
+                    <p style="margin-bottom: 1rem; line-height: 1.6;">Always validate on the server side. Client-side validation is just for UX (giving fast feedback to the user). An attacker can easily bypass client-side checks.</p>
+                    <p style="margin-bottom: 1rem; line-height: 1.6;">Here is a quick example of what NOT to do:</p>
+                    <pre style="background: #161b22; border: 1px solid #30363d; padding: 1rem; border-radius: 6px; overflow-x: auto; color: #e6edf3; font-family: monospace; margin-bottom: 1.5rem;">app.post('/api', (req, res) => {
+  // Never trust user input directly!
+  db.query(`SELECT * FROM users WHERE id = '${req.body.id}'`);
+});</pre>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <div style="background: #161b22; padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; display: flex; gap: 0.5rem; align-items: center;">
+                            <div style="width: 32px; height: 32px; background: #2ea043; color: white; display: flex; align-items: center; justify-content: center; border-radius: 4px;">DB</div>
+                            <div>
+                                <div style="color: #58a6ff; font-weight: 500;">db_master99</div>
+                                <div style="color: #8b949e;">52.1k reputation</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Your Answer Section (ATTACK SURFACE) -->
+            <div style="margin-top: 2rem;">
+                <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: #c9d1d9;">Your Answer</h3>
+                <form method="POST" action="/sandbox/attack">
+                    <input type="hidden" name="attack_type" value="xss">
+                    
+                    <div style="background: #161b22; border: 1px solid #30363d; border-radius: 6px 6px 0 0; padding: 0.5rem; display: flex; gap: 0.5rem; border-bottom: none;">
+                        <button type="button" style="background: none; border: none; color: #8b949e; cursor: pointer; padding: 0.2rem 0.5rem;"><b>B</b></button>
+                        <button type="button" style="background: none; border: none; color: #8b949e; cursor: pointer; padding: 0.2rem 0.5rem;"><i>I</i></button>
+                        <button type="button" style="background: none; border: none; color: #8b949e; cursor: pointer; padding: 0.2rem 0.5rem; font-family: monospace;">&lt;/&gt;</button>
+                        <button type="button" style="background: none; border: none; color: #8b949e; cursor: pointer; padding: 0.2rem 0.5rem;">🔗</button>
+                    </div>
+                    <textarea name="reply" style="width: 100%; min-height: 200px; padding: 1rem; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; font-family: monospace; border-radius: 0 0 6px 6px; box-sizing: border-box; outline: none; margin-bottom: 1rem; resize: vertical;" required placeholder="Type your answer here... Markdown is supported."></textarea>
+                    
+                    <button type="submit" style="background: #238636; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 1rem;">Post Your Answer</button>
+                </form>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside style="font-size: 0.9rem;">
+            <div style="background: #161b22; border: 1px solid #30363d; border-radius: 6px; margin-bottom: 1.5rem;">
+                <div style="background: #21262d; padding: 0.75rem 1rem; border-bottom: 1px solid #30363d; border-radius: 6px 6px 0 0; font-weight: 600;">Related Questions</div>
+                <div style="padding: 1rem; display: flex; flex-direction: column; gap: 1rem; color: #58a6ff;">
+                    <a href="#" style="color: #58a6ff; text-decoration: none;">How to sanitize HTML received from a rich text editor?</a>
+                    <a href="#" style="color: #58a6ff; text-decoration: none;">Differences between XSS and CSRF?</a>
+                    <a href="#" style="color: #58a6ff; text-decoration: none;">React dangerouslySetInnerHTML best practices</a>
+                </div>
+            </div>
+
+            <div style="background: #161b22; border: 1px solid #30363d; border-radius: 6px;">
+                <div style="background: #21262d; padding: 0.75rem 1rem; border-bottom: 1px solid #30363d; border-radius: 6px 6px 0 0; font-weight: 600;">Hot Network Questions</div>
+                <div style="padding: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                    <a href="#" style="color: #58a6ff; text-decoration: none; display: flex; gap: 0.5rem;"><span style="color: #8b949e;">💻</span> Why is my grep command missing some matches?</a>
+                    <a href="#" style="color: #58a6ff; text-decoration: none; display: flex; gap: 0.5rem;"><span style="color: #8b949e;">🐧</span> Explain this bash fork bomb</a>
+                    <a href="#" style="color: #58a6ff; text-decoration: none; display: flex; gap: 0.5rem;"><span style="color: #8b949e;">🔧</span> Docker containers can't communicate on custom bridge network</a>
+                </div>
+            </div>
+        </aside>
+
     </div>
 </div>
-
-{% include 'partials/score_overlay.html' %}
 {% endblock %}

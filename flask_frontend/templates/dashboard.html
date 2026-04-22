@@ -1,53 +1,91 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="glass-card" style="max-width: 900px; margin: 0 auto;">
-    <h1 style="margin-bottom: 0.5rem;">Welcome back, {{ username }}</h1>
-    <p style="color: var(--text-muted); margin-bottom: 2rem;">Level {{ stats.level }} Hacker | {{ stats.total_xp }} XP</p>
+<div class="glass-card" style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 300px; gap: 2rem;">
+    
+    <!-- Left Column (Main Content) -->
+    <div>
+        <h1 style="margin-bottom: 0.5rem; color: #f8fafc;">Welcome back, {{ username }}</h1>
+        <p style="color: #94a3b8; margin-bottom: 2rem;">Ready to catch some threats?</p>
 
-    <div style="margin-bottom: 3rem;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-            <span>Level Progress</span>
-            <span>{{ progress_pct }}% to next level</span>
-        </div>
-        <div class="xp-container">
-            <div class="xp-bar" style="width: {{ progress_pct }}%"></div>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-2" style="gap: 2rem;">
-        <div>
-            <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.5rem;">Your Badges</h2>
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                {% if stats.badges %}
-                    {% for badge in stats.badges %}
-                        <div class="badge-earned" title="{{ badge }}">{{ badge[:1] }}</div>
-                    {% endfor %}
-                {% else %}
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">No badges earned yet. Go hack something!</p>
-                {% endif %}
+        <!-- XP Bar Section (3.1) -->
+        <div class="xp-section" style="margin-bottom: 3rem;">
+            <div class="level-badge" style="display: inline-block; background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: bold; font-size: 0.9rem; margin-bottom: 0.75rem;">Level {{ level }}</div>
+            <div class="xp-bar-container" style="background: #1e293b; border-radius: 999px; height: 12px; width: 100%; overflow: hidden; margin-bottom: 0.5rem;">
+                <div class="xp-bar-fill" style="width: {{ level_progress_pct }}%; background: linear-gradient(90deg, #6366f1, #a855f7); height: 100%; border-radius: 999px; transition: width 1s ease-in-out;"></div>
             </div>
+            <span class="xp-label" style="font-size: 0.85rem; color: #94a3b8;">{{ total_xp }} XP → Next level at {{ xp_for_next_level }} XP</span>
         </div>
 
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
-                <h2 style="font-size: 1.25rem; m-0">Recent Activity</h2>
-                <a href="{{ url_for('environments.index') }}" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Labs &rarr;</a>
+        <!-- Recent Attacks Table (3.3) -->
+        <div style="margin-bottom: 3rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+                <h2 style="font-size: 1.25rem; color: #f8fafc; margin: 0;">Recent Attacks Captured</h2>
+                <a href="{{ url_for('environments.index') }}" style="color: #60a5fa; text-decoration: none; font-size: 0.9rem; font-weight: 500;">View Labs &rarr;</a>
             </div>
             
-            {% if stats.attack_history %}
-                <ul style="list-style: none;">
-                {% for attack in stats.attack_history %}
-                    <li style="padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between;">
-                        <span>{{ attack.type }}</span>
-                        <span style="color: #34d399;">+{{ attack.xp }} XP</span>
-                    </li>
+            <table class="attacks-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+                <thead>
+                    <tr style="color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <th style="padding: 0.75rem 0; font-weight: 500;">Time</th>
+                        <th style="padding: 0.75rem 0; font-weight: 500;">Lab</th>
+                        <th style="padding: 0.75rem 0; font-weight: 500;">Attack Type</th>
+                        <th style="padding: 0.75rem 0; font-weight: 500; text-align: right;">XP</th>
+                    </tr>
+                </thead>
+                <tbody style="color: #e2e8f0;">
+                {% for attack in recent_attacks %}
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 1rem 0;">{{ attack.timestamp | datetimeformat }}</td>
+                        <td style="padding: 1rem 0;"><span class="env-badge {{ attack.env_type }}" style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">{{ attack.env_type }}</span></td>
+                        <td style="padding: 1rem 0;">{{ attack.attack_type or "Unknown" }}</td>
+                        <td class="xp-cell" style="padding: 1rem 0; color: #34d399; font-weight: bold; text-align: right;">+{{ attack.xp_earned }}</td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="4" style="padding: 2rem 0; text-align: center; color: #64748b; font-style: italic;">No attacks yet. Go to Labs!</td></tr>
                 {% endfor %}
-                </ul>
-            {% else %}
-                <p style="color: var(--text-muted); font-size: 0.9rem;">No attacks recorded in recent history.</p>
-            {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Badge Shelf (3.2) -->
+        <div>
+            <h2 style="font-size: 1.25rem; color: #f8fafc; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">Achievement Badges</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem;">
+                {% for badge in all_badges %}
+                <div class="badge-card {{ 'earned' if badge.id in earned_badge_ids else 'locked' }}" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem 1rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: transform 0.2s; {{ '' if badge.id in earned_badge_ids else 'opacity: 0.4; filter: grayscale(1);' }}">
+                    <span class="badge-icon" style="font-size: 2.5rem; margin-bottom: 0.5rem;">{{ badge.icon }}</span>
+                    <span class="badge-name" style="font-weight: 600; color: #f8fafc; font-size: 0.95rem;">{{ badge.name }}</span>
+                    <span class="badge-desc" style="font-size: 0.75rem; color: #94a3b8; line-height: 1.2;">{{ badge.desc }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            <style>
+                .badge-card.earned { background: rgba(255,255,255,0.08) !important; border-color: rgba(255,255,255,0.2) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+                .badge-card.earned:hover { transform: translateY(-3px); }
+            </style>
         </div>
     </div>
+
+    <!-- Right Sidebar (Leaderboard) (3.5) -->
+    <aside>
+        <div class="leaderboard-widget" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem;">
+            <h3 style="margin-top: 0; margin-bottom: 1.5rem; color: #f8fafc; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem;">🏆 Top Hackers</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            {% for entry in leaderboard %}
+                <div class="leaderboard-row {{ 'highlight' if entry.user_id == current_user_id }}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; {{ 'background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3);' if entry.user_id == current_user_id else 'background: rgba(255,255,255,0.03);' }}">
+                    <span class="rank" style="font-weight: 800; color: #cbd5e1; width: 25px; text-align: center;">#{{ loop.index }}</span>
+                    <span class="username" style="flex: 1; font-weight: {{ '600' if entry.user_id == current_user_id else '500' }}; color: #f8fafc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ entry.username }}</span>
+                    <span class="xp" style="color: #a855f7; font-weight: 600; font-family: monospace;">{{ entry.total_xp }} <span style="font-size: 0.7rem;">XP</span></span>
+                </div>
+            {% else %}
+                <div style="text-align: center; color: #64748b; padding: 2rem 0; font-size: 0.9rem;">No data yet</div>
+            {% endfor %}
+            </div>
+        </div>
+    </aside>
+
 </div>
 {% endblock %}

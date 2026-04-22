@@ -38,7 +38,9 @@ def create_app():
     # Routers
     app.include_router(honeypot.router)
     app.include_router(admin.router)
-    app.include_router(health.router)
+    @app.get("/health")
+    async def health():
+        return {"status": "ok"}
     app.include_router(sandbox.router)
     app.include_router(scoring.router)
     app.include_router(users.router)

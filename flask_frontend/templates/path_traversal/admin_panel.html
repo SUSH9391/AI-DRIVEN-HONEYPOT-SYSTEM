@@ -1,60 +1,108 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div style="background: white; border: 1px solid #dee2e6; color: #212529; font-family: -apple-system, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; min-height: 70vh; border-radius: 4px; display: flex; flex-direction: column;">
+{% block main %}
+<div class="sandbox-immersion" style="font-family: monospace; background-color: #0a0a0a; color: #00ff00; margin: -2rem; min-height: 100vh; display: flex; flex-direction: column;">
     
     <!-- Header -->
-    <div style="background: #f8f9fa; padding: 1rem; border-bottom: 1px solid #dee2e6; display: flex; align-items: center; gap: 1rem;">
-        <div style="font-size: 1.5rem;">⚙️</div>
-        <div style="font-weight: 500; font-size: 1.2rem;">ServerAdmin Control Panel</div>
-        <div style="margin-left: auto; text-align: right; font-size: 0.85rem; color: #6c757d;">
-            Connected: ubuntu@prod-web-01
+    <header style="background: #111; padding: 1rem 2rem; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 1.2rem; font-weight: bold; letter-spacing: 1px;">
+            <span style="color: #fff;">ServerAdmin</span> :: System Control Panel
         </div>
-    </div>
-    
+        <div style="font-size: 0.8rem; color: #888;">
+            root@prod-web-01:~#
+        </div>
+    </header>
+
     <div style="display: flex; flex: 1;">
-        <!-- Sidebar Navigation -->
-        <div style="width: 220px; border-right: 1px solid #dee2e6; background: #fff;">
-            <ul style="list-style: none; margin: 0; padding: 1rem 0;">
-                <li style="padding: 0.75rem 1rem; border-left: 3px solid transparent; color: #6c757d;">📊 Server Status</li>
-                <li style="padding: 0.75rem 1rem; border-left: 3px solid transparent; color: #6c757d;">🌐 Nginx Config</li>
-                <li style="padding: 0.75rem 1rem; border-left: 3px solid #0d6efd; background: #e9ecef; font-weight: 500;">📖 Log Viewer</li>
-                <li style="padding: 0.75rem 1rem; border-left: 3px solid transparent; color: #6c757d;">🔄 Restarts</li>
-            </ul>
-        </div>
-        
-        <!-- Main Form Area -->
-        <div style="flex: 1; padding: 2rem;">
-            <h3 style="margin-bottom: 0.5rem; font-weight: 500;">System Log Diagnostics</h3>
-            <p style="color: #6c757d; font-size: 0.9rem; margin-bottom: 2rem;">Utility to view contents of local server files (typically /var/log/*).</p>
+        <!-- Left Sidebar: Server Stats -->
+        <aside style="width: 250px; background: #111; border-right: 1px solid #333; padding: 1.5rem;">
+            <h3 style="color: #fff; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 1.5rem; border-bottom: 1px solid #333; padding-bottom: 0.5rem;">Server Stats</h3>
             
-            <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 1.5rem;">
-                <form action="{{ url_for('sandbox.attack') }}" method="POST">
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">File Path</label>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <input type="text" name="log_file" value="syslog" style="flex: 1; padding: 0.75rem; border: 1px solid #ced4da; border-radius: 4px;" required>
-                        <button type="submit" style="background: #0d6efd; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500;">Read File</button>
-                    </div>
-                    <small style="color: #6c757d; display: block; margin-top: 0.5rem;">Files are read relative to <code>/var/log/</code> unless an absolute path is provided.</small>
-                </form>
+            <div style="margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                    <span>CPU Usage</span>
+                    <span>23%</span>
+                </div>
+                <div style="width: 100%; background: #333; height: 6px;">
+                    <div style="width: 23%; background: #00ff00; height: 100%;"></div>
+                </div>
             </div>
 
-            {% if score and score.attack_detected %}
-                <div style="margin-top: 2rem;">
-                    <h4 style="margin-bottom: 0.5rem; color: #dc3545;">[Exception] Illegal Path Detected</h4>
-                    <div style="background: #212529; color: #20c997; padding: 1rem; border-radius: 4px; font-family: monospace; white-space: pre-wrap; font-size: 0.85rem; border-left: 4px solid #dc3545;">
-Warning: Open logic trapped on absolute escape.
-Input: {{ request.form.get('log_file') }}
-Stack Trace:
-  File "/var/www/admin/logger.py", line 42, in read_file
-    with open('/var/log/' + input_path, 'r') as f:
-FileNotFoundError: [Errno 2] No such file or directory.
+            <div style="margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                    <span>Memory</span>
+                    <span>4.2 / 16 GB</span>
+                </div>
+                <div style="width: 100%; background: #333; height: 6px;">
+                    <div style="width: 26%; background: #00ff00; height: 100%;"></div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                    <span>Disk /dev/sda1</span>
+                    <span>45 / 100 GB</span>
+                </div>
+                <div style="width: 100%; background: #333; height: 6px;">
+                    <div style="width: 45%; background: #00ff00; height: 100%;"></div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <div style="color: #888; margin-bottom: 0.25rem;">Uptime</div>
+                <div>47 days, 14:22:09</div>
+            </div>
+
+            <h3 style="color: #fff; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 1rem; border-bottom: 1px solid #333; padding-bottom: 0.5rem;">Navigation</h3>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                <li style="cursor: pointer; color: #888;">[ ] Processes</li>
+                <li style="cursor: pointer; color: #888;">[ ] Network</li>
+                <li style="cursor: pointer; color: #00ff00; font-weight: bold;">[x] File Reader</li>
+                <li style="cursor: pointer; color: #888;">[ ] Logs</li>
+            </ul>
+        </aside>
+
+        <!-- Main Area: File Reader -->
+        <main style="flex: 1; padding: 2rem; display: flex; flex-direction: column;">
+            
+            <h2 style="color: #fff; font-size: 1.5rem; margin-bottom: 1rem; font-weight: normal;">System File Reader</h2>
+            <p style="color: #888; margin-bottom: 2rem;">Use this tool to read logs and configuration files directly from the server filesystem. Requires administrative privileges.</p>
+
+            <form method="POST" action="/sandbox/attack" style="margin-bottom: 2rem;">
+                <input type="hidden" name="attack_type" value="path_traversal">
+                
+                <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: #fff;">Enter file path:</label>
+                        <input type="text" name="path" value="/var/log/apache2/access.log" style="width: 100%; padding: 0.75rem; background: #111; border: 1px solid #333; color: #00ff00; font-family: monospace; outline: none; box-sizing: border-box;" required>
+                        <div style="color: #555; font-size: 0.8rem; margin-top: 0.25rem;">Example: /var/log/syslog, /etc/nginx/nginx.conf</div>
+                    </div>
+                    <div>
+                        <br>
+                        <button type="submit" style="background: #00ff00; color: #000; border: none; padding: 0.75rem 1.5rem; font-family: monospace; font-weight: bold; cursor: pointer; text-transform: uppercase;">
+                            Read File
+                        </button>
                     </div>
                 </div>
-            {% endif %}
-        </div>
+            </form>
+
+            <div style="background: #050505; border: 1px solid #333; flex: 1; display: flex; flex-direction: column; position: relative;">
+                <div style="background: #111; border-bottom: 1px solid #333; padding: 0.5rem 1rem; color: #888; font-size: 0.8rem; display: flex; justify-content: space-between;">
+                    <span>Terminal Output</span>
+                    <span>View: RAW</span>
+                </div>
+                <div style="padding: 1rem; overflow-y: auto; flex: 1;">
+                    <div>$ cat /var/log/apache2/access.log</div>
+                    <div style="color: #888; margin-top: 0.5rem;">
+192.168.1.1 - - [22/Apr/2026:10:15:32 +0000] "GET / HTTP/1.1" 200 1024<br>
+10.0.0.5 - - [22/Apr/2026:10:16:01 +0000] "POST /login HTTP/1.1" 401 512<br>
+172.16.0.12 - - [22/Apr/2026:10:18:45 +0000] "GET /images/logo.png HTTP/1.1" 200 4502<br>
+                    </div>
+                    <div style="margin-top: 1rem; color: #888;">[EOF]</div>
+                </div>
+            </div>
+
+        </main>
     </div>
 </div>
-
-{% include 'partials/score_overlay.html' %}
 {% endblock %}

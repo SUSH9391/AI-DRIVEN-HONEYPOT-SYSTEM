@@ -1,39 +1,59 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div style="background: #f4f6f8; color: #333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 70vh; border-radius: 8px; overflow: hidden; display: flex;">
-    <div style="flex: 1; background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1000&q=80') center/cover; position: relative;">
-        <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6)); display: flex; flex-direction: column; justify-content: center; padding: 4rem;">
-            <h1 style="color: white; font-size: 3rem; margin-bottom: 1rem;">Apex Corp<br>Employee Portal</h1>
-            <p style="color: #cbd5e1; font-size: 1.2rem; max-width: 400px;">Internal access platform for authorized personnel. All activity is logged.</p>
+{% block main %}
+<div class="sandbox-immersion" style="font-family: 'Inter', sans-serif; height: 100vh; display: flex; flex-direction: column; background-color: #1a1a2e; margin: -2rem;">
+    <!-- Fake Header -->
+    <header style="background-color: #111122; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a4a;">
+        <div style="font-size: 1.25rem; font-weight: 700; color: #0066cc;">
+            <span style="background: #0066cc; color: white; padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.5rem;">A</span>
+            Apex Systems
         </div>
-    </div>
-    
-    <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 4rem; background: white;">
-        <div style="width: 100%; max-width: 400px;">
-            <div style="margin-bottom: 3rem; text-align: center;">
-                <div style="width: 60px; height: 60px; background: #0f172a; border-radius: 12px; margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center;">
-                    <span style="color: white; font-size: 1.5rem; font-weight: bold;">A</span>
-                </div>
-                <h2 style="color: #0f172a; font-size: 1.8rem;">Single Sign-On</h2>
-            </div>
-            
-            <form action="{{ url_for('sandbox.attack') }}" method="POST">
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Corporate Email</label>
-                    <input type="email" name="email" style="width: 100%; padding: 0.875rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem;" placeholder="employee@apexcorp.com" required>
-                </div>
-                
-                <div style="margin-bottom: 2rem;">
-                    <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Password</label>
-                    <input type="password" name="password" style="width: 100%; padding: 0.875rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem;" required>
-                </div>
-                
-                <button type="submit" style="width: 100%; background: #0f172a; color: white; padding: 1rem; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s;">Authenticate</button>
-            </form>
+        <div style="font-size: 0.85rem; color: #a0a0c0;">
+            Secure Employee Portal
         </div>
-    </div>
-</div>
+    </header>
 
-{% include 'partials/score_overlay.html' %}
+    <!-- Main Content -->
+    <main style="flex: 1; display: flex; justify-content: center; align-items: center; padding: 2rem;">
+        <div style="background: #111122; border: 1px solid #2a2a4a; border-radius: 8px; overflow: hidden; width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <div style="padding: 2.5rem 2rem;">
+                <h2 style="color: white; margin-bottom: 0.5rem; font-weight: 500; text-align: center; font-size: 1.5rem;">SSO Login</h2>
+                <p style="color: #8b8ba7; text-align: center; font-size: 0.9rem; margin-bottom: 2rem;">Use your Apex network credentials</p>
+
+                <form method="POST" action="/sandbox/attack">
+                    <input type="hidden" name="attack_type" value="sqli">
+                    
+                    <div style="margin-bottom: 1.25rem;">
+                        <input type="text" name="username" placeholder="Corporate Email" style="width: 100%; padding: 0.875rem; background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 4px; color: white; box-sizing: border-box; outline: none;" required>
+                    </div>
+
+                    <div style="margin-bottom: 1.25rem;">
+                        <input type="password" name="password" placeholder="Password" style="width: 100%; padding: 0.875rem; background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 4px; color: white; box-sizing: border-box; outline: none;" required>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; font-size: 0.85rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; color: #8b8ba7; cursor: pointer;">
+                            <input type="checkbox" style="accent-color: #0066cc;"> Keep me signed in
+                        </label>
+                    </div>
+
+                    <button type="submit" style="width: 100%; background: #0066cc; color: white; border: none; padding: 0.875rem; border-radius: 4px; font-weight: 500; font-size: 1rem; cursor: pointer; transition: background 0.2s;">
+                        Sign In
+                    </button>
+                    
+                    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <a href="#" style="color: #0066cc; text-decoration: none;">Forgot password?</a>
+                        <a href="#" style="color: #0066cc; text-decoration: none;">IT Support</a>
+                        <a href="#" style="color: #0066cc; text-decoration: none;">New employee? Contact HR</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Fake Footer -->
+    <footer style="padding: 1.5rem; text-align: center; color: #64648b; font-size: 0.8rem;">
+        <p>Apex Systems Inc. | <a href="#" style="color: #64648b; text-decoration: underline;">IT Security Policy</a> | <a href="#" style="color: #64648b; text-decoration: underline;">Privacy Notice</a></p>
+    </footer>
+</div>
 {% endblock %}

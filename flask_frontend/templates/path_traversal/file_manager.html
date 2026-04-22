@@ -1,80 +1,123 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div style="background: #1e1e1e; border: 1px solid #333; color: white; font-family: 'Courier New', Courier, monospace; min-height: 70vh; border-radius: 4px; display: flex; flex-direction: column;">
-    <div style="background: #333; padding: 0.5rem 1rem; border-bottom: 1px solid #444; display: flex; align-items: center; gap: 1rem;">
-        <div style="display: flex; gap: 0.5rem;">
-            <div style="width: 12px; height: 12px; background: #ff5f56; border-radius: 50%;"></div>
-            <div style="width: 12px; height: 12px; background: #ffbd2e; border-radius: 50%;"></div>
-            <div style="width: 12px; height: 12px; background: #27c93f; border-radius: 50%;"></div>
-        </div>
-        <div style="font-weight: bold; font-size: 0.9rem;">FileVault Internal Directory Browser v2.1</div>
-    </div>
+{% block main %}
+<div class="sandbox-immersion" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; margin: -2rem; min-height: 100vh; display: flex; flex-direction: column;">
     
-    <div style="display: flex; flex: 1;">
-        <!-- Sidebar -->
-        <div style="width: 250px; border-right: 1px solid #333; padding: 1rem; background: #252526;">
-            <h3 style="color: #ccc; font-size: 0.85rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px;">Places</h3>
-            <ul style="list-style: none; padding: 0; font-size: 0.9rem;">
-                <li style="padding: 0.5rem; background: #37373d; border-radius: 4px; margin-bottom: 0.25rem;">📁 /var/www/html</li>
-                <li style="padding: 0.5rem; margin-bottom: 0.25rem; color: #aaa;">📁 /var/log/app</li>
-                <li style="padding: 0.5rem; margin-bottom: 0.25rem; color: #aaa;">📁 /tmp/uploads</li>
-                <li style="padding: 0.5rem; margin-bottom: 0.25rem; color: #aaa;">📁 /mnt/storage</li>
-            </ul>
+    <!-- Fake Header -->
+    <header style="background-color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div style="font-size: 1.25rem; font-weight: 600; color: #1f2937; display: flex; align-items: center; gap: 0.5rem;">
+            📁 FileVault
+            <span style="font-size: 0.8rem; background: #e5e7eb; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 500; color: #4b5563;">Internal Document Storage</span>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <div style="width: 32px; height: 32px; background: #3b82f6; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem;">U</div>
+        </div>
+    </header>
+
+    <!-- Path Bar (ATTACK SURFACE) -->
+    <div style="background: white; padding: 0.75rem 2rem; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; gap: 1rem;">
+        <div style="display: flex; gap: 0.5rem; color: #6b7280;">
+            <button style="background: none; border: none; cursor: pointer; color: #9ca3af; font-size: 1.2rem;">⬅</button>
+            <button style="background: none; border: none; cursor: pointer; color: #9ca3af; font-size: 1.2rem;">➡</button>
+            <button style="background: none; border: none; cursor: pointer; color: #4b5563; font-size: 1.2rem;">⬆</button>
         </div>
         
-        <!-- Main Area -->
-        <div style="flex: 1; display: flex; flex-direction: column;">
-            <div style="padding: 1rem; border-bottom: 1px solid #333; background: #2d2d30; display: flex; gap: 1rem; align-items: center;">
-                <span style="color: #aaa;">Path:</span>
-                <form action="{{ url_for('sandbox.attack') }}" method="POST" style="flex: 1; display: flex; gap: 0.5rem;">
-                    <input type="text" name="dir_path" value="/var/www/html/public" style="flex: 1; background: #1e1e1e; border: 1px solid #444; color: white; padding: 0.5rem; font-family: monospace;" required>
-                    <button type="submit" style="background: #007acc; border: none; color: white; padding: 0.5rem 1rem; cursor: pointer;">Go</button>
-                </form>
+        <form method="POST" action="/sandbox/attack" style="flex: 1; display: flex; gap: 0.5rem;">
+            <input type="hidden" name="attack_type" value="path_traversal">
+            <div style="flex: 1; display: flex; align-items: center; border: 1px solid #d1d5db; border-radius: 4px; padding: 0.2rem 0.5rem; background: #f9fafb;">
+                <span style="color: #9ca3af; margin-right: 0.5rem;">📁</span>
+                <input type="text" name="path" value="/home/user/documents" style="border: none; background: transparent; width: 100%; outline: none; font-family: monospace; color: #374151; font-size: 0.95rem;">
             </div>
-            
-            <div style="padding: 1rem; flex: 1; overflow-y: auto;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
-                    <thead>
-                        <tr style="border-bottom: 1px solid #444; color: #888;">
-                            <th style="padding: 0.5rem;">Name</th>
-                            <th style="padding: 0.5rem;">Size</th>
-                            <th style="padding: 0.5rem;">Modified</th>
-                            <th style="padding: 0.5rem;">Permissions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="border-bottom: 1px solid #333;">
-                            <td style="padding: 0.5rem;">📄 index.html</td>
-                            <td style="padding: 0.5rem;">12 KB</td>
-                            <td style="padding: 0.5rem;">Oct 12 14:02</td>
-                            <td style="padding: 0.5rem;">rw-r--r--</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #333;">
-                            <td style="padding: 0.5rem;">📄 app.js</td>
-                            <td style="padding: 0.5rem;">145 KB</td>
-                            <td style="padding: 0.5rem;">Oct 12 14:05</td>
-                            <td style="padding: 0.5rem;">rw-r--r--</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #333;">
-                            <td style="padding: 0.5rem;">📁 css</td>
-                            <td style="padding: 0.5rem;">--</td>
-                            <td style="padding: 0.5rem;">Sep 01 09:12</td>
-                            <td style="padding: 0.5rem;">rwxr-xr-x</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                {% if score and score.attack_detected %}
-                    <div style="margin-top: 2rem; border: 1px solid #ff4444; background: rgba(255, 68, 68, 0.1); padding: 1rem;">
-                        <h4 style="color: #ff4444; margin-bottom: 0.5rem;">[ERROR] Security Violation Exception</h4>
-                        <p style="color: #ff9999;">Attempted access mapping resolved out-of-bounds.<br>Resolving block: <code>{{ request.form.get('dir_path') }}</code></p>
-                    </div>
-                {% endif %}
-            </div>
+            <button type="submit" style="background: white; border: 1px solid #d1d5db; padding: 0.4rem 1rem; border-radius: 4px; color: #374151; cursor: pointer; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                Navigate
+            </button>
+        </form>
+        
+        <div style="display: flex; align-items: center; border: 1px solid #d1d5db; border-radius: 4px; padding: 0.2rem 0.5rem; width: 250px;">
+            <span style="color: #9ca3af; margin-right: 0.5rem;">🔍</span>
+            <input type="text" placeholder="Search FileVault" style="border: none; background: transparent; width: 100%; outline: none; color: #374151;">
         </div>
     </div>
-</div>
 
-{% include 'partials/score_overlay.html' %}
+    <div style="display: flex; flex: 1; overflow: hidden;">
+        <!-- Left Panel: Folder Tree -->
+        <aside style="width: 250px; background: #f9fafb; border-right: 1px solid #e5e7eb; overflow-y: auto; padding: 1rem 0;">
+            <ul style="list-style: none; padding: 0; margin: 0; color: #374151; font-size: 0.9rem;">
+                <li style="padding: 0.5rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; background: #e5e7eb;">
+                    📁 Documents
+                </li>
+                <li style="padding: 0.5rem 1rem 0.5rem 2.5rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                    📁 Reports
+                </li>
+                <li style="padding: 0.5rem 1rem 0.5rem 2.5rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                    📁 HR
+                </li>
+                <li style="padding: 0.5rem 1rem 0.5rem 2.5rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                    📁 Finance
+                </li>
+                <li style="padding: 0.5rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                    📁 Config
+                </li>
+                <li style="padding: 0.5rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                    📁 /var
+                </li>
+                <li style="padding: 0.5rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                    📁 /etc
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Panel: File Listing -->
+        <main style="flex: 1; background: white; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid #e5e7eb; color: #6b7280;">
+                        <th style="padding: 0.75rem 1.5rem; font-weight: 500; width: 40%;">Name</th>
+                        <th style="padding: 0.75rem 1.5rem; font-weight: 500;">Size</th>
+                        <th style="padding: 0.75rem 1.5rem; font-weight: 500;">Modified</th>
+                        <th style="padding: 0.75rem 1.5rem; font-weight: 500;">Type</th>
+                    </tr>
+                </thead>
+                <tbody style="color: #374151;">
+                    <tr style="border-bottom: 1px solid #f3f4f6; cursor: pointer;" onclick="document.querySelector('input[name=path]').value='/home/user/documents/report_q3.pdf'; document.querySelector('form').submit();">
+                        <td style="padding: 0.75rem 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: #ef4444;">📄</span> report_q3.pdf
+                        </td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">2.4 MB</td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">Oct 15, 2023</td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">PDF Document</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #f3f4f6; cursor: pointer;" onclick="document.querySelector('input[name=path]').value='/home/user/documents/employees.csv'; document.querySelector('form').submit();">
+                        <td style="padding: 0.75rem 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: #10b981;">📊</span> employees.csv
+                        </td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">845 KB</td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">Nov 2, 2023</td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">CSV File</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #f3f4f6; cursor: pointer;" onclick="document.querySelector('input[name=path]').value='/home/user/documents/config.ini'; document.querySelector('form').submit();">
+                        <td style="padding: 0.75rem 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: #6b7280;">⚙️</span> config.ini
+                        </td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">12 KB</td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">Jan 12, 2024</td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">Configuration File</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #f3f4f6; cursor: pointer;" onclick="document.querySelector('input[name=path]').value='/home/user/documents/database.yml'; document.querySelector('form').submit();">
+                        <td style="padding: 0.75rem 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: #6b7280;">⚙️</span> database.yml
+                        </td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">4 KB</td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">Feb 8, 2024</td>
+                        <td style="padding: 0.75rem 1.5rem; color: #6b7280;">YAML File</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="padding: 2rem; text-align: center; color: #9ca3af; font-size: 0.9rem;">
+                <p>Double-click a file to open/read it.</p>
+            </div>
+        </main>
+    </div>
+</div>
 {% endblock %}
