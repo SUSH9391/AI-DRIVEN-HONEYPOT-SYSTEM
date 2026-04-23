@@ -7,9 +7,7 @@ engine = create_async_engine(
     settings.DATABASE_URL,
     poolclass=NullPool,
     echo=settings.ENVIRONMENT == "development",
-    connect_args={
-        "ssl": "require"
-    }
+    connect_args={"ssl": "require"} if "postgresql" in settings.DATABASE_URL else {}
 )
 
 async_session = async_sessionmaker(

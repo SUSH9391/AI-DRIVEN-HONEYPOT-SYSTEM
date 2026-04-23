@@ -23,8 +23,11 @@ def create_app():
     # DB create tables (dev only)
     @app.on_event("startup")
     async def startup():
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
+        try:
+            async with engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+        except Exception as e:
+            print(f"DB init failed (continuing): {e}")
 
     # Middleware stack
     app.add_middleware(AuthMiddleware)
@@ -60,3 +63,4 @@ app = create_app()
 # Run locally
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+

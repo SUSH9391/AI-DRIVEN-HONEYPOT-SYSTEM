@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     host: Optional[str] = None
     port: Optional[int] = 5432
     dbname: Optional[str] = "postgres"
-    DATABASE_URL: str = "postgresql+asyncpg://user:pass@localhost:5432/honeypot"
+    DATABASE_URL: str = "sqlite+aiosqlite:///./honeypot.db"
     
     # Supabase Auth
     SUPABASE_URL: Optional[str] = "http://dummy"
@@ -39,3 +39,4 @@ class Settings(BaseSettings):
         return self
 
 settings = Settings()
+
