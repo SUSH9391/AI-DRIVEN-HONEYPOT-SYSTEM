@@ -1,14 +1,14 @@
 import os
-from flask import Flask, redirect, url_for, session
+from flask import Flask, redirect, url_for
 from flask_session import Session
-from flask_frontend.config import Config
+from config import Config
 
 # Blueprints
-from flask_frontend.routes.auth import auth_bp
-from flask_frontend.routes.dashboard import dashboard_bp
-from flask_frontend.routes.environments import environments_bp
-from flask_frontend.routes.sandbox import sandbox_bp
-from flask_frontend.routes.landing import landing_bp
+from routes.auth import auth_bp
+from routes.dashboard import dashboard_bp
+from routes.environments import environments_bp
+from routes.sandbox import sandbox_bp
+from routes.landing import landing_bp
 
 def create_app(test_config=None):
     app = Flask(__name__, template_folder='templates', static_folder='static')
@@ -51,3 +51,4 @@ def create_app(test_config=None):
 if __name__ == "__main__":
     app = create_app()
     app.run(host="0.0.0.0", port=app.config.get('PORT', 5000))
+

@@ -1,5 +1,5 @@
 import pytest
-from flask_frontend.app import create_app
+from app import create_app
 
 @pytest.fixture
 def app(tmp_path_factory):
@@ -30,7 +30,7 @@ def mock_fastapi_client(monkeypatch):
     Uses unittest.mock.AsyncMock for async methods.
     """
     from unittest.mock import AsyncMock, patch
-    from flask_frontend.services import fastapi_client as fc_module
+    from services import fastapi_client as fc_module
 
     mock = AsyncMock()
     mock.login_with_supabase.return_value = {
@@ -76,7 +76,7 @@ def mock_fastapi_client(monkeypatch):
 def mock_httpx_fastapi_client(monkeypatch):
     """Patches the internal _request method of FastAPIClient directly."""
     from unittest.mock import AsyncMock, patch
-    from flask_frontend.services.fastapi_client import FastAPIClient
+    from services.fastapi_client import FastAPIClient
 
     mock_request = AsyncMock()
     with patch.object(FastAPIClient, "_request", mock_request):

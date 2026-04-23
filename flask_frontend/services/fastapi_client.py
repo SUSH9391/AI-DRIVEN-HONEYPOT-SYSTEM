@@ -1,5 +1,5 @@
 import httpx
-from flask_frontend.config import Config
+from config import Config
 from typing import Dict, Any
 
 class FastAPIClient:

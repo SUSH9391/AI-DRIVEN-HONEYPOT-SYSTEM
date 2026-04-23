@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 import asyncio
-from flask_frontend.services import fastapi_client as fc_module
+from services import fastapi_client as fc_module
 
 sandbox_bp = Blueprint('sandbox', __name__, url_prefix='/sandbox')
 

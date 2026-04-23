@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for
 import asyncio
-from flask_frontend.services import fastapi_client as fc_module
+from services import fastapi_client as fc_module
 
 dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 

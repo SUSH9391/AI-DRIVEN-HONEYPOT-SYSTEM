@@ -1,5 +1,5 @@
 import pytest
-from flask_frontend.services.fastapi_client import fastapi_client
+from services.fastapi_client import fastapi_client
 import httpx
 
 @pytest.mark.asyncio
@@ -18,7 +18,7 @@ async def test_score_attack_adds_service_token_header(mock_httpx_fastapi_client)
 
 @pytest.mark.asyncio
 async def test_client_handles_fastapi_timeout_gracefully(mocker):
-    from flask_frontend.services.fastapi_client import FastAPIClient
+    from services.fastapi_client import FastAPIClient
     client = FastAPIClient()
     
     mock_http_client = mocker.patch("httpx.AsyncClient.request", side_effect=httpx.RequestError("Timeout"))
