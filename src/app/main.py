@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Request
 
-from app.routers import honeypot, admin, health, sandbox, scoring, users
-from app.middleware import AuthMiddleware, FingerprintMiddleware, LoggingMiddleware
+from app.routers import admin, health, sandbox, scoring, users
+from app.middleware.service_auth import ServiceAuthMiddleware
+from app.middleware.logging_mw import LoggingMiddleware
 from app.middleware.rate_limit import limiter
 
 from slowapi import _rate_limit_exceeded_handler
@@ -30,8 +31,7 @@ def create_app():
             print(f"DB init failed (continuing): {e}")
 
     # Middleware stack
-    app.add_middleware(AuthMiddleware)
-    app.add_middleware(FingerprintMiddleware)
+    app.add_middleware(ServiceAuthMiddleware)
     app.add_middleware(LoggingMiddleware)
 
     # Rate Limiter Global
@@ -39,11 +39,8 @@ def create_app():
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
     # Routers
-    app.include_router(honeypot.router)
     app.include_router(admin.router)
-    @app.get("/health")
-    async def health():
-        return {"status": "ok"}
+    app.include_router(health.router)
     app.include_router(sandbox.router)
     app.include_router(scoring.router)
     app.include_router(users.router)

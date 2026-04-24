@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from core.database import get_session
+from core.redis import aredis_client
 import uuid
 import secrets
 import random
@@ -25,7 +26,7 @@ async def create_sandbox(req: SandboxCreateRequest, db: AsyncSession = Depends(g
 
     theme_template = random.choice(THEMES[req.env_type])
     sandbox_id = uuid.uuid4()
-    session_token = secrets.token_hex(32)
+    session_token = secrets.token_urlsafe(32)
 
     new_session = SandboxSession(
         id=sandbox_id,
@@ -39,6 +40,8 @@ async def create_sandbox(req: SandboxCreateRequest, db: AsyncSession = Depends(g
     
     db.add(new_session)
     await db.commit()
+    
+    await aredis_client.setex(f"sandbox:{session_token}", 7200, str(sandbox_id))
     
     return SandboxCreateResponse(
         sandbox_id=sandbox_id,
@@ -62,7 +65,7 @@ async def delete_sandbox(sandbox_id: uuid.UUID, db: AsyncSession = Depends(get_s
     
     return {
         "success": True, 
-        "xp_summary": sandbox.xp_earned, 
+        "xp_earned": sandbox.xp_earned, 
         "attacks_detected": sandbox.attacks_detected
     }
 
