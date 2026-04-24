@@ -1,14 +1,14 @@
 import os
 from flask import Flask, redirect, url_for
 from flask_session import Session
-from config import Config
+from .config import Config
 
 # Blueprints
-from routes.auth import auth_bp
-from routes.dashboard import dashboard_bp
-from routes.environments import environments_bp
-from routes.sandbox import sandbox_bp
-from routes.landing import landing_bp
+from .routes.auth import auth_bp
+from .routes.dashboard import dashboard_bp
+from .routes.environments import environments_bp
+from .routes.sandbox import sandbox_bp
+from .routes.landing import landing_bp
 
 def create_app(test_config=None):
     app = Flask(__name__, template_folder='templates', static_folder='static')

@@ -14,7 +14,7 @@ def test_sandbox_play_renders_correct_template(auth_client):
         
     response = auth_client.get('/sandbox/play')
     assert response.status_code == 200
-    assert b"SecureBank" in response.data
+    assert b"NorthWest Federal Bank" in response.data
 
 def test_attack_scoring_returns_overlay(auth_client, mock_fastapi_client):
     with auth_client.session_transaction() as sess:

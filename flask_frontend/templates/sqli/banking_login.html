@@ -67,4 +67,7 @@
         <p>© 2024 NorthWest Federal Bank. Member FDIC. Equal Housing Lender 🏠.</p>
     </footer>
 </div>
+{% if show_overlay %}
+    {% include "partials/score_overlay.html" %}
+{% endif %}
 {% endblock %}

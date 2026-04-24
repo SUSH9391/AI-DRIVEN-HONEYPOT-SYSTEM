@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for
 import asyncio
-from services import fastapi_client as fc_module
+from flask_frontend.services import fastapi_client as fc_module
 
 environments_bp = Blueprint('environments', __name__, url_prefix='/environments')
 

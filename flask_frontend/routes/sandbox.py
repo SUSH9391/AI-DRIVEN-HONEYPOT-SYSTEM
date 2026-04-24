@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 import asyncio
-from services import fastapi_client as fc_module
+from flask_frontend.services import fastapi_client as fc_module
 
 sandbox_bp = Blueprint('sandbox', __name__, url_prefix='/sandbox')
 
@@ -78,12 +78,12 @@ def attack():
         flash(f"Level Up! You reached Level {result.get('level')}!", 'level_up')
     
     theme = active_sandbox.get('theme_template', 'sqli/banking_login.html')
-    return render_template(
-        theme,
-        score=result,
-        attack_detected=result.get('attack_detected', False),
-        show_overlay=True
-    )
+    context = dict(result)
+    context['score'] = result
+    context['attack_detected'] = result.get('attack_detected', False)
+    context['show_overlay'] = True
+    context['new_level'] = result.get('level')
+    return render_template(theme, **context)
 
 @sandbox_bp.route('/end', methods=['GET', 'DELETE'])
 def end():
