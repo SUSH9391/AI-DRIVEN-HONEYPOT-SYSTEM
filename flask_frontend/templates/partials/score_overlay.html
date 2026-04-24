@@ -8,42 +8,40 @@
             </div>
             <h1 class="title success-text">Attack Detected!</h1>
             
-            <div class="badge-type">{{ attack_type | upper }}</div>
+            <div class="badge-type">{{ score.get('attack_type', 'Unknown') | upper }}</div>
             
             <div class="confidence-container">
                 <div class="confidence-label">
                     <span>Confidence Score</span>
-                    <span>{{ (confidence * 100) | round | int }}%</span>
+                    <span>{{ (score.get('confidence', 0) * 100) | round | int }}%</span>
                 </div>
                 <div class="progress-bar-bg">
-                    <div class="progress-bar-fill progress-success" style="width: {{ confidence * 100 }}%"></div>
+                    <div class="progress-bar-fill progress-success" style="width: {{ score.get('confidence', 0) * 100 }}%"></div>
                 </div>
             </div>
 
-            <div class="xp-earned">
-                <span class="xp-plus">+</span><span>{{ xp_earned }}</span> <span class="xp-text">XP Earned</span>
-            </div>
+            <div class="xp-earned">+{{ score.get('xp_earned', 0) }} XP</div>
 
-            {% if hint %}
+            {% if score.get('hint') %}
             <div class="hint-box">
                 <div class="hint-icon">💡</div>
-                <div class="hint-text">{{ hint }}</div>
+                <div class="hint-text">{{ score.get('hint', '') }}</div>
             </div>
             {% endif %}
 
             <!-- Level Up Banner -->
-            {% if level_up %}
+            {% if score.get('level_up') %}
             <div class="level-up-banner">
                 <div style="font-size: 2rem;">⚡</div>
                 <div style="font-size: 1.5rem; font-weight: 700;">LEVEL UP!</div>
-                <div>You reached Level {{ new_level }}</div>
+                <div>You reached Level {{ score.get('level', 1) }}</div>
             </div>
             {% endif %}
 
-            {% if badge_unlocked %}
+            {% if score.get('badge_unlocked') %}
             <div class="badge-unlocked-banner">
                 <div style="font-size: 1.5rem;">🏅</div>
-                <div style="font-weight: 600;">Badge Unlocked: {{ badge_unlocked }}</div>
+                <div style="font-weight: 600;">Badge Unlocked: {{ score.get('badge_unlocked') }}</div>
             </div>
             {% endif %}
 
@@ -204,8 +202,8 @@
 <script>
 function closeOverlay() {
     // Check if there is a next_url to redirect to
-    {% if next_url %}
-        window.location.href = "{{ next_url }}";
+    {% if score.get('next_url') %}
+        window.location.href = "{{ score.get('next_url') }}";
     {% else %}
         // Default to going back or to dashboard
         if (document.referrer && document.referrer.includes(window.location.host)) {
@@ -216,3 +214,4 @@ function closeOverlay() {
     {% endif %}
 }
 </script>
+

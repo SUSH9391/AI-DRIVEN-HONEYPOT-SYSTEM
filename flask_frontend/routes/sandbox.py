@@ -78,12 +78,14 @@ def attack():
         flash(f"Level Up! You reached Level {result.get('level')}!", 'level_up')
     
     theme = active_sandbox.get('theme_template', 'sqli/banking_login.html')
-    context = dict(result)
-    context['score'] = result
-    context['attack_detected'] = result.get('attack_detected', False)
-    context['show_overlay'] = True
-    context['new_level'] = result.get('level')
-    return render_template(theme, **context)
+    return render_template(
+        theme,
+        score=result,
+        attack_detected=result.get('attack_detected', False),
+        show_overlay=True,
+        level_up=result.get('level_up', False),
+        new_level=result.get('level', session.get('level', 1)),
+    )
 
 @sandbox_bp.route('/end', methods=['GET', 'DELETE'])
 def end():
