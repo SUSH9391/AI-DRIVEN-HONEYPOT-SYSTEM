@@ -15,13 +15,12 @@ config = context.config
 
 # Import models
 from core.database import Base
-from app.models.attack_log import AttackLog, Session, User
-from app.models.sandbox import SandboxSession, Badge
+from app.models import AttackLog, Session, User, SandboxSession, Badge
 target_metadata = Base.metadata
 
 # Set SQLAlchemy URL from config
 from core.config import settings
-if config.get_main_option("sqlalchemy.url") is None:
+if config.get_main_option("DATABASE_URL") is None:
     config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
 def run_migrations_offline() -> None:
@@ -55,4 +54,3 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
-

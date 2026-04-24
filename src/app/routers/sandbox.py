@@ -33,6 +33,7 @@ async def create_sandbox(req: SandboxCreateRequest, db: AsyncSession = Depends(g
         env_type=req.env_type,
         theme_template=theme_template,
         difficulty_level=req.difficulty_level,
+        session_token=session_token,
         active=True
     )
     
