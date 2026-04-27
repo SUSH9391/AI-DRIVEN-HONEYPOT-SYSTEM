@@ -12,7 +12,10 @@ def require_auth():
 @dashboard_bp.route('/')
 def index():
     user_id = session.get('user_id')
-    stats = asyncio.run(fc_module.fastapi_client.get_user_stats(user_id))
+    stats = asyncio.run(fc_module.fastapi_client.get_user_stats(
+        user_id,
+        jwt=session.get('jwt')
+    ))
     
     # Check if get_user_stats succeeded; if not use mock data structure
     if 'error' in stats:
@@ -24,7 +27,7 @@ def index():
         session.modified = True
         
     try:
-        leaderboard = asyncio.run(fc_module.fastapi_client.get_leaderboard(limit=10))
+        leaderboard = asyncio.run(fc_module.fastapi_client.get_leaderboard())
     except Exception:
         leaderboard = []
 

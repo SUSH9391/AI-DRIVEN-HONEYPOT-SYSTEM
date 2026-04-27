@@ -7,8 +7,10 @@ import uuid
 import secrets
 import random
 from app.models.sandbox import SandboxSession
+from app.models.attack_log import User
 from app.schemas.sandbox import SandboxCreateRequest, SandboxCreateResponse
 from app.middleware.service_auth import verify_service_token
+from app.core.dependencies import get_current_user
 
 router = APIRouter(prefix="/api/sandbox", tags=["sandbox"], dependencies=[Depends(verify_service_token)])
 
@@ -20,7 +22,11 @@ THEMES = {
 }
 
 @router.post("/create", response_model=SandboxCreateResponse)
-async def create_sandbox(req: SandboxCreateRequest, db: AsyncSession = Depends(get_session)):
+async def create_sandbox(
+    req: SandboxCreateRequest,
+    db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
     if req.env_type not in THEMES:
         raise HTTPException(status_code=400, detail="Invalid env_type")
 
@@ -30,7 +36,7 @@ async def create_sandbox(req: SandboxCreateRequest, db: AsyncSession = Depends(g
 
     new_session = SandboxSession(
         id=sandbox_id,
-        user_id=req.user_id,
+        user_id=current_user.id,
         env_type=req.env_type,
         theme_template=theme_template,
         difficulty_level=req.difficulty_level,
@@ -52,12 +58,19 @@ async def create_sandbox(req: SandboxCreateRequest, db: AsyncSession = Depends(g
     )
 
 @router.delete("/{sandbox_id}")
-async def delete_sandbox(sandbox_id: uuid.UUID, db: AsyncSession = Depends(get_session)):
+async def delete_sandbox(
+    sandbox_id: uuid.UUID,
+    db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
     result = await db.execute(select(SandboxSession).where(SandboxSession.id == sandbox_id))
     sandbox = result.scalar_one_or_none()
     
     if not sandbox or not sandbox.active:
         raise HTTPException(status_code=404, detail="Active sandbox not found")
+    
+    if sandbox.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this sandbox")
         
     sandbox.active = False
     sandbox.ended_at = func.now()
@@ -70,12 +83,19 @@ async def delete_sandbox(sandbox_id: uuid.UUID, db: AsyncSession = Depends(get_s
     }
 
 @router.get("/{sandbox_id}/status")
-async def get_sandbox_status(sandbox_id: uuid.UUID, db: AsyncSession = Depends(get_session)):
+async def get_sandbox_status(
+    sandbox_id: uuid.UUID,
+    db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
     result = await db.execute(select(SandboxSession).where(SandboxSession.id == sandbox_id))
     sandbox = result.scalar_one_or_none()
     
     if not sandbox:
         raise HTTPException(status_code=404, detail="Sandbox not found")
+    
+    if sandbox.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to view this sandbox")
         
     return {
         "active": sandbox.active,

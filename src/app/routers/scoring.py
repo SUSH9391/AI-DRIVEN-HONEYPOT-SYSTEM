@@ -10,6 +10,7 @@ from app.models.sandbox import SandboxSession, Badge
 from app.models.attack_log import User, AttackLog
 from app.schemas.sandbox import ScoreAttackRequest, ScoreAttackResponse
 from app.middleware.service_auth import verify_service_token
+from app.core.dependencies import get_current_user
 from app.services.honeypot_service import get_honeypot_service, HoneypotService
 from app.services.badge_service import check_and_award_badges
 from core.config import settings
@@ -22,7 +23,8 @@ async def score_attack(
     req: ScoreAttackRequest, 
     background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_session),
-    honeypot_svc: HoneypotService = Depends(get_honeypot_service)
+    honeypot_svc: HoneypotService = Depends(get_honeypot_service),
+    current_user: User = Depends(get_current_user)
 ):
     # Validate session_token against Redis
     expected_sandbox_id = await aredis_client.get(f"sandbox:{req.session_token}")
@@ -35,6 +37,10 @@ async def score_attack(
     
     if not sandbox or not sandbox.active:
         raise HTTPException(status_code=404, detail="Active sandbox session not found")
+    
+    # Ensure the sandbox belongs to the authenticated user
+    if sandbox.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to score this sandbox")
         
     rule_res = honeypot_svc.rule_detector.classify(json.dumps(req.attack_payload))
     confidence = rule_res.confidence

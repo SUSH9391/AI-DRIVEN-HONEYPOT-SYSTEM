@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 
-from app.routers import admin, health, sandbox, scoring, users
+from app.routers import admin, auth, health, sandbox, scoring, users
 from app.middleware.service_auth import ServiceAuthMiddleware
 from app.middleware.logging_mw import LoggingMiddleware
 from app.middleware.rate_limit import limiter
@@ -39,6 +39,7 @@ def create_app():
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
     # Routers
+    app.include_router(auth.router)
     app.include_router(admin.router)
     app.include_router(health.router)
     app.include_router(sandbox.router)
@@ -60,4 +61,3 @@ app = create_app()
 # Run locally
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
-

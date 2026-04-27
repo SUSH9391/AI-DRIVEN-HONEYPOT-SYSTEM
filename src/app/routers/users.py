@@ -7,11 +7,20 @@ from app.models.attack_log import User, AttackLog
 from app.models.sandbox import Badge
 import uuid
 from app.middleware.service_auth import verify_service_token
+from app.core.dependencies import get_current_user
 
 router = APIRouter(prefix="/api", tags=["users"], dependencies=[Depends(verify_service_token)])
 
 @router.get("/user/{user_id}/stats")
-async def get_user_stats(user_id: uuid.UUID, db: AsyncSession = Depends(get_session)):
+async def get_user_stats(
+    user_id: uuid.UUID,
+    db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
+    # Users can only view their own stats
+    if str(user_id) != str(current_user.id):
+        raise HTTPException(status_code=403, detail="Not authorized to view this user's stats")
+        
     result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     

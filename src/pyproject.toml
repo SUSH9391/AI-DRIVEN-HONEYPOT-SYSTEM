@@ -25,6 +25,7 @@ dependencies = [
     "loguru==0.7.2",
     "PyJWT==2.8.0",
     "redis==5.0.8",
+    "supabase>=2.0.0",
 
     # migrations
     "alembic>=1.18.4",

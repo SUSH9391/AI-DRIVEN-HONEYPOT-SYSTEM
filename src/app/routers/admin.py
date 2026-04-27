@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query, Request, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from app.middleware.rate_limit import limiter
-from core.security import require_admin
+from app.core.dependencies import require_admin
 from core.database import get_session
 from app.models.attack_log import AttackLog
 from app.models.sandbox import SandboxSession
@@ -55,4 +55,3 @@ async def get_stats(request: Request, db: AsyncSession = Depends(get_session), u
         "total_detections": total_detections,
         "active_sandboxes": active_sandboxes
     }
-

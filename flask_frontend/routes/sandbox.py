@@ -26,7 +26,9 @@ def create():
     
     result = asyncio.run(
         fc_module.fastapi_client.create_sandbox(
-            session['user_id'], env_type, difficulty
+            env_type=env_type,
+            difficulty_level=difficulty,
+            jwt=session.get('jwt')
         )
     )
     
@@ -63,9 +65,10 @@ def attack():
         fc_module.fastapi_client.score_attack(
             sandbox_id=active_sandbox['sandbox_id'],
             session_token=active_sandbox['session_token'],
-            attack_payload=payload,
-            attack_surface=active_sandbox.get('theme_template', ''),
-            source_ip=request.remote_addr or '127.0.0.1'
+            payload=payload,
+            surface=active_sandbox.get('theme_template', ''),
+            ip=request.remote_addr or '127.0.0.1',
+            jwt=session.get('jwt')
         )
     )
     
@@ -91,6 +94,9 @@ def attack():
 def end():
     sandbox = session.get('active_sandbox')
     if sandbox:
-        asyncio.run(fc_module.fastapi_client.end_sandbox(sandbox['sandbox_id']))
+        asyncio.run(fc_module.fastapi_client.end_sandbox(
+            sandbox['sandbox_id'],
+            jwt=session.get('jwt')
+        ))
         session.pop('active_sandbox', None)
     return redirect(url_for('dashboard.index'))

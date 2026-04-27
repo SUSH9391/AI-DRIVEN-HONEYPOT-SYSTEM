@@ -12,7 +12,10 @@ def require_auth():
 @environments_bp.route('/')
 def index():
     user_id = session.get('user_id')
-    stats = asyncio.run(fc_module.fastapi_client.get_user_stats(user_id))
+    stats = asyncio.run(fc_module.fastapi_client.get_user_stats(
+        user_id,
+        jwt=session.get('jwt')
+    ))
     level = stats.get('level', 1)
     
     envs = [

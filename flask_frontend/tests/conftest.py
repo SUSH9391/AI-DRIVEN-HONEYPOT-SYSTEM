@@ -33,21 +33,29 @@ def mock_fastapi_client(monkeypatch):
     from flask_frontend.services import fastapi_client as fc_module
 
     mock = AsyncMock()
-    mock.login_with_supabase.return_value = {
+    mock.login.return_value = {
         "jwt": "fake-jwt",
         "user_id": "user-uuid-123",
-        "username": "testuser"
+        "username": "testuser",
+        "email": "test@example.com",
+        "role": "user",
+        "total_xp": 0,
+        "level": 1
     }
-    mock.signup_with_supabase.return_value = {
+    mock.register.return_value = {
         "jwt": "fake-jwt",
         "user_id": "user-uuid-123",
-        "username": "testuser"
+        "username": "testuser",
+        "email": "test@example.com",
+        "role": "user",
+        "total_xp": 0,
+        "level": 1
     }
     mock.get_user_stats.return_value = {
         "total_xp": 150,
         "level": 1,
         "badges": [],
-        "recent_attacks": [],
+        "attack_history": [],
         "leaderboard_rank": 42
     }
     mock.create_sandbox.return_value = {
@@ -90,4 +98,5 @@ def auth_client(app, client):
         sess["level"] = 1
         sess["total_xp"] = 0
         sess["jwt"] = "fake-jwt-token"
+        sess["role"] = "user"
     return client
