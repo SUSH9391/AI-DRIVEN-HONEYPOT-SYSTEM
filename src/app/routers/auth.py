@@ -3,8 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from core.database import get_session
 from core.config import settings
+from app.middleware.rate_limit import limiter
 from app.models.attack_log import User
 from app.core.dependencies import require_service_token, get_current_user
+from fastapi import Request
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 import uuid
@@ -61,10 +63,11 @@ async def _supabase_auth_request(path: str, payload: dict) -> dict:
 
 
 @router.post("/register", response_model=AuthResponse)
+@limiter.limit("5/minute")
 async def register(
+    request: Request,
     req: RegisterRequest,
     db: AsyncSession = Depends(get_session),
-    _token: str = Depends(require_service_token),
 ):
     # 1. Create user in Supabase Auth
     sb_resp = await _supabase_auth_request(
@@ -107,10 +110,11 @@ async def register(
 
 
 @router.post("/login", response_model=AuthResponse)
+@limiter.limit("10/minute")
 async def login(
+    request: Request,
     req: LoginRequest,
     db: AsyncSession = Depends(get_session),
-    _token: str = Depends(require_service_token),
 ):
     # 1. Authenticate via Supabase
     sb_resp = await _supabase_auth_request(

@@ -17,7 +17,8 @@ import os
 
 # App factory
 def create_app():
-    app = FastAPI(title="AI Honeypot", version="1.0.0")
+    docs_url = "/docs" if os.getenv("ENVIRONMENT") != "production" else None
+    app = FastAPI(title="AI Honeypot", version="1.0.0", docs_url=docs_url)
 
     # App is now JSON-only backend. (Jinja2 moved to Flask frontend)
 

@@ -16,7 +16,7 @@ async def verify_service_token(api_key: str = Security(api_key_header)):
 
 class ServiceAuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        public_paths = {"/docs", "/openapi.json", "/health"}
+        public_paths = {"/docs", "/openapi.json", "/health", "/api/auth/login", "/api/auth/register"}
         if request.url.path in public_paths:
             return await call_next(request)
         
